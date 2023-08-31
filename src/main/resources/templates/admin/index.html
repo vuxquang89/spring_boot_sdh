@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>[[${pageTitle}]]</title>
+<th:block th:include = "@{admin/header}"></th:block>
+</head>
+<body>
+	<th:block th:include = "@{admin/navbar}"></th:block>
+	<th:block th:include = "@{admin/canvas}"></th:block>
+	
+	<main class="mt-5 pt-3">
+        <div class="container-fluid">
+			<div class="position-fixed top-0 end-0 p-2 alert-top" style="z-index: 9999">
+			       
+			</div>
+			   	
+            <div class="row">
+                <div class="col-md-10 fw-bold fs-3">
+                    Khu vực
+                </div>
+                <div class="col-md-2">
+
+                    <!-- Button trigger modal -->
+                    <button type="button" id="btnOpenModalAddDistrict" class="btn btn-primary btn-sm" title="Thêm khu vực" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop">
+                        <i class="bi bi-plus"></i>Thêm khu vực
+                    </button>
+
+                    <!-- Modal them khu vuc-->
+                    <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Thêm khu vực</h5>
+                                    <button type="button" class="btn-close btn-close-modal-add-district" data-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                
+                                    <div class="modal-body">
+                                        <input id="districtName" name="district_name" class="form-control input-sm" type="text" placeholder="Nhập tên khu vực" required>
+                                        <div class="invalid-feedback text-left"></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary btn-close-modal-add-district" data-dismiss="modal">Bỏ
+                                            qua</button>
+                                        <input type="button" id="btnAddDistrict" value="Thêm" name="add_district" class="btn btn-primary">
+                                    </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal sua ten khu vuc-->
+                    <div class="modal fade" id="staticEditDistrict" data-backdrop="static" data-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticEditDistrictLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticEditDistrictLabel">Sửa tên khu vực</h5>
+                                    <button type="button" class="btn-close btn-close-modal-edit-district" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                
+                                    <div class="modal-body">
+                                        <input id="districtEditName" name="district_edit_name" class="form-control input-sm" type="text" placeholder="Nhập tên khu vực" required>
+                                        <div class="invalid-feedback text-left"></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary btn-close-modal-edit-district" data-bs-dismiss="modal">Bỏ
+                                            qua</button>
+                                        <input type="button" id="btnEditDistrict" value="Cập nhật" name="edit_district" class="btn btn-primary">
+                                    </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                     <!-- Modal sua ten site-->
+                    <div class="modal fade" id="staticEditSite" data-backdrop="static" data-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticEditSiteLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticSiteLabel">Sửa tên Site</h5>
+                                    <button type="button" class="btn-close btn-close-modal-edit-site" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                
+                                    <div class="modal-body">
+                                        <input id="siteEditName" name="site_edit_name" class="form-control input-sm" type="text" placeholder="Nhập tên Site" required>
+                                        <div class="invalid-feedback text-left"></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary btn-close-modal-edit-site" data-bs-dismiss="modal">Bỏ
+                                            qua</button>
+                                        <input type="button" id="btnEditSite" value="Cập nhật" name="edit_site" class="btn btn-primary">
+                                    </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="cardDistrict" class="row pt-2">
+                
+			<!-- <th:block th:each="district : ${listDistricts}">
+			
+                <div class="col-md-4 mb-4 card-district" th:attr="data-id=${district.id}, data-name=${district.name}">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <div class="row">
+                                <label class="col-md-8" th:text="${district.name}"></label>
+                                <div class="col-md-4">
+                                    <button class="btn btn-outline-primary btn-sm fw-bold btn-add-site" type="button"
+                                        data-bs-toggle="modal" title="Thêm site cho khu vực" data-bs-target="#staticAddSite">+</button>
+                                    <button class="btn btn-outline-danger btn-sm fw-bold btn-delete-district" type="button"
+                                        title="Xóa khu vực">x</button>
+                                </div>
+                                
+                            </div>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="overflow-auto card-body-content" style="max-width: 370px; max-height: 200px;">
+
+                                <div class="row border-bottom me-0">
+                                    <div class="col-md-8">
+                                        <label class="pt-1 ps-2">Hà Nội</label>
+                                    </div>
+                                    <div class="col-md-4 pe-0">
+                                        <button class="btn btn-outsite btn-sm text-warning" type="button"><i class="bi bi-pencil-fill"></i></button>
+                                    <button class="btn btn-outsite btn-sm text-danger" type="button"><i class="bi bi-trash3-fill"></i></button>
+                                    </div>
+                                </div>
+                                <div class="row border-bottom me-0">
+                                    <div class="col-md-8">
+                                        <label class="pt-1 ps-2">Hồ chí minh</label>
+                                    </div>
+                                    <div class="col-md-4 pe-0">
+                                        <button class="btn btn-outsite btn-sm text-warning" type="button"><i class="bi bi-pencil-fill"></i></button>
+                                    	<button class="btn btn-outsite btn-sm text-danger" type="button"><i class="bi bi-trash3-fill"></i></button>
+                                    </div>
+                                </div>
+                                <div class="row border-bottom me-0">
+                                    <div class="col-md-8">
+                                        <label class="pt-1 ps-2">Hồ chí minh</label>
+                                    </div>
+                                    <div class="col-md-4 pe-0">
+                                        <button class="btn btn-outsite btn-sm text-warning" type="button"><i class="bi bi-pencil-fill"></i></button>
+                                    	<button class="btn btn-outsite btn-sm text-danger" type="button"><i class="bi bi-trash3-fill"></i></button>
+                                    </div>
+                                </div>
+                                <div class="row border-bottom me-0">
+                                    <div class="col-md-8">
+                                        <label class="pt-1 ps-2">Hồ chí minh</label>
+                                    </div>
+                                    <div class="col-md-4 pe-0">
+                                        <button class="btn btn-outsite btn-sm text-warning" type="button"><i class="bi bi-pencil-fill"></i></button>
+                                    	<button class="btn btn-outsite btn-sm text-danger" type="button"><i class="bi bi-trash3-fill"></i></button>
+                                    </div>
+                                </div>
+                                <div class="row border-bottom me-0">
+                                    <div class="col-md-8">
+                                        <label class="pt-1 ps-2">Hồ chí minh</label>
+                                    </div>
+                                    <div class="col-md-4 pe-0">
+                                        <button class="btn btn-outsite btn-sm text-warning" type="button"><i class="bi bi-pencil-fill"></i></button>
+                                    	<button class="btn btn-outsite btn-sm text-danger" type="button"><i class="bi bi-trash3-fill"></i></button>
+                                    </div>
+                                </div>
+                                <div class="row border-bottom me-0">
+                                    <div class="col-md-8">
+                                        <label class="pt-1 ps-2">Hồ chí minh</label>
+                                    </div>
+                                    <div class="col-md-4 pe-0">
+                                        <button class="btn btn-outsite btn-sm text-warning" type="button"><i class="bi bi-pencil-fill"></i></button>
+                                    	<button class="btn btn-outsite btn-sm text-danger" type="button"><i class="bi bi-trash3-fill"></i></button>
+                                    </div>
+                                </div>
+                                <div class="row border-bottom me-0">
+                                    <div class="col-md-8">
+                                        <label class="pt-1 ps-2">Hồ chí minh</label>
+                                    </div>
+                                    <div class="col-md-4 pe-0">
+                                        <button class="btn btn-outsite btn-sm text-warning" type="button"><i class="bi bi-pencil-fill"></i></button>
+                                    	<button class="btn btn-outsite btn-sm text-danger" type="button"><i class="bi bi-trash3-fill"></i></button>
+                                    </div>
+                                </div>
+
+                              </div>
+                        </div>
+                    </div>
+
+                </div>
+			
+			</th:block>  
+                 -->
+			
+            </div>
+
+
+
+
+            <!-- Modal them site-->
+            <div class="modal fade" id="staticAddSite" data-backdrop="static" data-keyboard="false" tabindex="-1"
+                aria-labelledby="staticAddSiteLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticAddSiteLabel">Trục M1 - Thêm site</h5>
+                            <button type="button" class="btn-close btn-close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        
+                            <div class="modal-body">
+                                <div class="row">
+                                    
+                                    <div class="col-sm-9">
+                                      <input type="text" class="form-control form-control-sm" placeholder="Nhập tên Site" id="inputSiteName">
+                                      <div class="invalid-feedback text-left"></div>
+                                    </div>
+                                    <div class="col-md-3">
+                                    	<input id="btnAddSite" type="button" title="Thêm site mới" class="btn btn-primary btn-sm" value="Thêm">
+                                    </div>
+                                </div>
+                                  <div id="boxCardDevices" class="mb-3 row">
+                                    <label id="titleDeviceSite" class="col-sm-12 col-form-label fw-bold">Chọn thiết bị</label>
+                                    <div class="col-sm-12 mb-2">
+                                    	<div class="row">
+                                    		<div class="col-sm-6">
+                                    			<input type="text" class="form-control form-control-sm inputKeySearchDevice" placeholder="Tìm tên thiết bị ...">
+                                    		</div>
+                                    		<div class="col-sm-4 div-box-check-all">                                    		
+                                    			<input class="form-check-input checkAll" type="checkbox" value="" id="checkAll1">
+												<label class="form-check-label" for="checkAll1">
+												    Chọn tất cả
+												</label>
+												
+                                    		</div>
+                                    		<div class="col-sm-4 div-box-add-fast">
+                                    			<input class="btn btn-warning btn-sm" type="button" title="Thêm nhanh thiết bị vào danh mục" id="btnAddFast" value="Thêm nhanh">
+                                    		</div>
+                                    		
+                                    	</div>
+                                    	<div class="row pt-3">
+                                    		
+                                    		<div class="col-sm-12 div-box-select-category">
+                                    			<div class="row">
+                                    				<label class="col-sm-4">Chọn danh mục</label>
+                                    				<div class="col-sm-6">
+                                    					<select id="selectCategory" class="form-select form-select-sm"></select>
+				                                        <div class="invalid-feedback text-left"></div>
+                                    				</div>
+                                    			</div>
+                                    			
+                                    		</div>
+                                    		
+                                    	</div>
+                                    	<hr class="m-t-1 m-b-1">
+                                    </div>
+                                   
+                                    <div class="col-sm-12">
+                                        <div class="row" id="cardDevices">
+                                        
+                                        
+                                    	</div>
+                                   </div>
+                                   <div class="mb-3 row">
+                                    <div class="offset-sm-3">
+                                        <button id="btnAddDeviceSite" class="btn btn-primary btn-sm" type="button"><i class="bi bi-plus"></i>Thêm</button>
+                                        <button id="btnCancelSelectDevice" class="btn btn-danger btn-sm" type="button"><i class="bi bi-x"></i>Hủy</button>
+                                    </div>
+                                   </div>
+                                   </div>
+                                  <hr>
+                                  <div class="mb-3 row">
+	                                  <div id="siteContent" class="overflow-auto" style="max-width: 470px; max-height: 330px;">
+	                                    
+	                                  </div>
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-close-modal" data-bs-dismiss="modal">Đóng</button>
+                                
+                            </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal them thiet bi-->
+            <div class="modal fade" id="staticAddDeviceSite" data-backdrop="static" data-keyboard="false" tabindex="-1"
+                aria-labelledby="staticAddDeviceSiteLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticAddDeviceSiteLabel">Thêm thiêt bị cho site - </h5>
+                            <button type="button" class="btn-close btn-close-modal-add-device" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        
+                            <div class="modal-body">
+                                <div id="boxCardAddDevices" class="mb-3 row">
+                                    <!-- <label id="titleAddDeviceSite" class="col-sm-12 col-form-label fw-bold">Chọn thiết bị</label>  -->
+                                    <div class="col-sm-12 mb-2">
+                                    	<div class="row">
+                                    		<div class="col-sm-6">
+                                    			<input type="text" class="form-control form-control-sm inputKeySearchDevice" placeholder="Tìm tên thiết bị ...">
+                                    		</div>
+                                    		<div class="col-sm-4">
+                                    			<input class="form-check-input checkAll" type="checkbox" value="" id="checkAll2">
+												<label class="form-check-label" for="checkAll2">
+												    Chọn tất cả
+												</label>
+                                    		</div>
+                                    	</div>
+                                    	<hr class="m-t-1 m-b-1">
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="row" id="cardAddDevices">
+                                        
+                                        
+                                    	</div>
+                                   </div>
+                                   
+                               	</div>
+                                      
+                            <div class="modal-footer">
+                            	<button id="btnAddDeviceForSite" class="btn btn-primary btn-sm" type="button"><i class="bi bi-plus"></i>Thêm</button>
+                                <button type="button" class="btn btn-danger btn-sm btn-close-modal-add-device" data-bs-dismiss="modal">Đóng</button>
+                                
+                            </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        </div>
+    </main>     
+    
+	<!-- Back to top button -->
+	<button
+	        type="button"
+	        class="btn btn-danger btn-floating btn-lg"
+	        id="btn-back-to-top"
+	        >
+	        
+	  	<i class="bi bi-arrow-up"></i>
+	</button>
+    
+    <div class="modal-loading"></div> 
+    <script type="text/javascript">
+    	var contextPath = "[[@{/}]]";
+    	
+    	var pagePath = "[[${pagePath}]]";
+    	var current = document.getElementsByClassName(pagePath);
+        current[0].className += " active";
+    	//var csrfToken = $("meta[name='_csrf']").attr("content");
+    	//var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+    	
+    	var csrfHeader = "[[${_csrf.headerName}]]";
+    	var csrfToken = "[[${_csrf.token}]]";
+    	
+    	
+    	
+    </script> 
+    
+    <!-- <th:block th:include = "@{admin/footer}"></th:block> -->
+    <script th:src="@{/js/jquery-3.5.1.js}"></script> 
+	<script th:src="@{/js/bootstrap.min.js}"></script> 
+	<!-- <script th:src="@{/js/bootstrap.bundle.min.js}"></script>  -->
+    <script th:src="@{/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/js/dataTables.bootstrap5.min.js}"></script>
+    <script th:src="@{/js/script.js}"></script>
+    <script type="text/javascript" th:src="@{/js/districts.js}"></script>
+    <script th:src="@{/js/alerts.js}"></script>
+    
+</body>
+</html>

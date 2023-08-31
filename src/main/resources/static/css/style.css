@@ -1,0 +1,229 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+body, button{
+    font-family: "Inter", sans-serif;
+}
+
+:root{
+    --offcanvas-width: 270px;
+    --topNavbarHeight: 56px;
+    --bootstrap-sm: 576px;
+    --bootstrap-md: 768px;
+    --bootstrap-lg: 992px;
+    --bootstrap-xl: 1200px;
+}
+
+.bg-login{
+	background-color: #b7cbe1;
+}
+
+.sidebar-nav{
+    width: var(--offcanvas-width);
+}
+.sidebar-link {
+    display: flex;
+    align-items: center;
+}
+.sidebar-link .right-icon{
+    display: inline-flex;
+    transition: all ease 0.25s;
+}
+.sidebar-link[aria-expanded="true"] .right-icon{
+    transform: rotate(180deg);
+}
+
+.vertical-center {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+ }
+
+ 
+
+td {
+    word-break: break-all;
+    white-space: pre-line;
+}
+
+td .td-img{
+    height: 100px;
+}
+
+.carousel-item img{
+    height: 60vw;
+    object-fit: cover;
+}
+
+#myCarousel{
+	margin-top: 65px;
+	margin-bottom: 0;
+}
+
+.carousel-item .img-header{
+	height: 100%;
+}
+
+.gradient-custom-2 {
+	/* fallback for old browsers */
+	background: #fccb90;
+	
+	/* Chrome 10-25, Safari 5.1-6 */
+	background: -webkit-linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+	
+	/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+}
+
+.alert{
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+	margin-bottom: 0;
+}
+
+.alert-dismissible .btn-close{
+	padding-top: 0.7rem;
+	padding-bottom: 0.7rem;
+}
+
+.modal-loading {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('http://i.stack.imgur.com/FhHRx.gif') 
+                50% 50% 
+                no-repeat;
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading .modal-loading {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal-loading {
+    display: block;
+}
+
+#boxCardDevices{
+	display: none;
+}
+
+#btn-back-to-top {
+	width: 50px;
+  	height: 50px;
+ 	position: fixed;
+  	bottom: 20px;
+  	right: 20px;
+  	display: none;
+  	border-radius: 25px;
+}
+
+p.invalid-feedback{
+	width: 50%;
+	margin-top: 0;
+}
+#showImageSliderModal .modal-header{
+	padding: 0;
+}
+
+#showImageSliderModalLabel{
+	padding-left: 10px;
+}
+
+#showImageSliderModal .modal-header .btn-close-model-slider-image{
+	padding-right: 1.5rem;
+}
+
+.row-container-device-image{
+	position: relative;
+}
+
+.row-container-device-image .btn-delete-device-image{
+ 	position: absolute;  
+  	border: none;
+  	bottom: 0;
+  	width: 10%;
+  	
+}
+
+#btnSearch{
+	border-top-right-radius: 0.25rem;
+	border-bottom-right-radius: 0.25rem;
+}
+
+#btnEraser{
+	border-radius: 0.25rem;
+}
+
+.m-t-1{
+	margin-top: 0.25rem;
+}
+
+.m-b-1{
+	margin-bottom: 0.25rem;
+}
+
+/* hide scrollbar but allow scrolling */
+#showImageSliderModal {
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+  overflow-y: scroll; 
+}
+
+#showImageSliderModal::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+}
+
+@media (min-width:992px) {
+    body{
+        overflow: auto !important;
+    }
+    .offcanvas-backdrop::before{
+        display: none;
+    }
+    main{
+        margin-left: var(--offcanvas-width);
+    }
+    .navbar-nav .dropdown-menu{
+    	margin-left: -110px;
+		margin-top: 10px;
+    }
+    .sidebar-nav{
+        transform: none;
+        visibility: visible !important;
+        top: var(--topNavbarHeight);
+        height: calc(100% - var(--topNavbarHeight));
+    }
+
+    .carousel-item img{
+        /*height: 600px;*/
+        height: auto;
+        /*aspect-ratio: attr(1920) / attr(2560);*/
+    }
+}
+
+@media (min-width: 768px) {
+	.gradient-form {
+		height: auto !important;
+	}
+}
+@media (min-width: 769px) {
+	.gradient-custom-2 {
+		border-top-right-radius: .3rem;
+		border-bottom-right-radius: .3rem;
+	}
+}
+
+@media (min-width:575px){
+    .carousel-item img{
+        height: auto;
+        /*aspect-ratio: attr(1920) / attr(2560);*/
+    }
+}

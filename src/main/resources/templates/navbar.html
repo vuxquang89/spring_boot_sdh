@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-navar">
+    <div class="container-fluid">
+      <a class="navbar-brand" th:href="@{/}">
+      	<img th:src="@{/imgs/logo-sdh.png}" alt="logo sdh" width="90" height="40" class="d-inline-block align-text-top">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link home" aria-current="page" th:href="@{/}">Trang chủ</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link operate" aria-current="page" th:href="@{/operate}">Thống kê vận hành</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link shift" aria-current="page" th:href="@{/shift}">Giao - Nhận ca</a>
+          </li>
+          
+        </ul>
+        <!-- 
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+         -->
+         
+         <div class="ms-auto text-white" sec:authorize="isAuthenticated()">
+         	<span th:text = "'Chào ' + ${#request.userPrincipal.principal.username}"></span>
+         </div>
+
+         <ul class="navbar-nav mb-2 mb-lg-0">
+			<li class="nav-item dropdown">
+            	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                	        data-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-fill"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <block th:if="${#request.userPrincipal != null}">
+                	<li><a class="dropdown-item profile" th:href="@{/profile}">Thông tin cá nhân</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="javascript: logoutForm.submit()">Thoát</a></li>
+                </block>
+                        
+                <block th:unless="${#request.userPrincipal != null}">
+                	<li><a class="dropdown-item" th:href="@{/login}">Đăng nhập</a></li>
+                </block>
+                        </ul>
+                    </li>
+
+         </ul>
+         <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+         	<input type="submit" value="logout"/>
+         </form>
+      </div>
+    </div>
+  </nav>

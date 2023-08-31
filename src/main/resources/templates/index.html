@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>[[${pageTitle}]] - SDH</title>
+<th:block th:include = "@{header}"></th:block>
+<link th:href="@{/css/mystyle.css}" rel="stylesheet">
+</head>
+<body>
+	
+  <th:block th:include = "@{navbar}"></th:block>	
+
+  <th:block th:include = "@{banner}"></th:block>
+
+  <main class="container">
+  	<div class="position-fixed top-0 end-0 p-2 alert-top" style="z-index: 9999"></div>
+  
+  <div class="d-flex align-items-center p-3 my-3 text-white bg-header rounded shadow-sm">
+    
+    <div class="lh-1">
+      <h1 class="h5 mb-0 text-red lh-2">Thiết bị trong Site</h1>
+      
+    </div>
+  </div>
+
+  <div class="my-3 p-3 bg-body rounded shadow-sm">
+    <div class="row">
+    	<div class="col col-md-12">
+        	<div class="row">
+            	<div class="col col-md-10 border-bottom">
+                	<div class="card mb-3">
+
+                    	<div class="card-body">
+                        	<div class="row">
+                            	<div class="col-md-7">
+                                	<div class="row">
+                                    	<label class="fw-bold col-sm-4">Chọn khu vực</label>
+                                        <div class="col-sm-6">
+                                        	<select id="selectDistrict" class="form-select form-select-sm">
+			                                	<option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
+			                                </select>
+                                        </div>
+									</div>
+                                </div>
+                                <div class="col-md-5">
+                                	<div class="row">
+                                    	<label class="fw-bold col-sm-4">Chọn Site</label>
+                                        <div class="col col-sm-6">
+                                        	<select id="selectSite" class="form-select form-select-sm">
+			                                	<option value="0" disabled selected>-- Chọn Site --</option>
+			                                    <option th:each="site : ${sites}" th:value="${site.id}" th:text="${site.name}"></option>
+			                                </select>
+			                            	<div class="invalid-feedback text-left"></div>
+                                       	</div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                   	</div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-muted pt-3">
+      <div class="row">
+      	<div class="col col-12 col-sm-6 col-md-4">
+		        	<div class="d-flex">
+		            	<div class="p-2 ml-auto">
+		                	<label>Hiển thị</label>
+		                </div>
+		                <div class="p-2 ml-auto">
+		                	<select id="selectPageSize" class="form-select form-select-sm">
+		                    	<option value="10">10</option>
+		                        <option value="15">15</option>
+		                        <option value="20">20</option>
+		                    </select>
+		                </div>
+		                <div class="p-2 ml-auto">
+		                	<label>mục</label>
+		               	</div>
+		            </div>
+		        </div>
+		        <div class="col col-md-2"></div>
+		<div class="col col-12 col-sm-5 col-md-4">
+		        	<div class="row form-group">
+		            	<div class="col-4"></div>
+		            	<div class="input-group col-4 mb-3">
+						  <input type="text" id="inputSearch" class="form-control form-control-sm" title="Nhập tên Danh mục hoặc Thiết bị" placeholder="Tìm kiếm..." aria-label="Nhập từ khóa...">
+						  <button class="btn btn-primary btn-sm" type="button" id="btnSearch"><i class="bi bi-search"></i></button>
+						  <button class="btn btn-sm btn-outline-dark ms-1" type="button" title="Xóa tìm kiếm" id="btnEraser"><i class="bi bi-eraser-fill"></i></button>
+						</div>
+		                
+		            </div>
+				</div>
+      	
+    </div>
+
+	<div class="row table-responsive">
+    	<table id="tableSiteInfo" class="table table-bordered">
+        	<thead class="table-light">
+            	<tr>
+                	<th scope="col">#</th>
+                    <th scope="col" class="text-center">Danh Mục</th>
+                    <th scope="col" width="150" class="text-center">Thiết Bị</th>
+                    <th scope="col" width="50" class="text-center">Số lượng</th>
+                    <th scope="col" width="120" class="text-center">Serial Number</th>
+                    <th scope="col" width="60" class="text-center">Slot</th>
+                    <th scope="col" width="200" class="text-center">Ảnh Thiết Bị</th>
+                    <th scope="col" width="150" class="text-center">Ghi chú</th>
+                    
+				</tr>
+            </thead>
+            <tbody>
+            	<tr><td colspan="9" class="text-center">Không có dữ liệu!</td><tr>
+            </tbody>
+       	</table>
+        <ul id="pagination" class="pagination pagination-sm justify-content-end">
+        	
+        </ul>
+     </div>
+    </div>
+    
+    
+  </div>
+  
+  <!--modal image slider-->
+
+        <!-- Modal -->
+
+        <div class="modal fade" id="showImageSliderModal" data-backdrop="static" data-keyboard="false"
+            tabindex="-1" aria-labelledby="showImageSliderModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="showImageSliderModalLabel">Modal title</h5>
+                        <button type="button" class="btn-close btn-close-model-slider-image" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="carouselExampleCaptions" class="carousel slide" data-touch="false" data-interval="false">
+                            <div class="carousel-indicators">
+                            
+                            </div>
+                            <div class="carousel-inner">
+                            
+                            </div>
+                            <button class="carousel-control-prev" type="button"
+                                data-target="#carouselExampleCaptions" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button"
+                                data-target="#carouselExampleCaptions" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!--end modal-->
+
+  
+</main>
+
+	<button
+	        type="button"
+	        class="btn btn-danger btn-floating btn-lg"
+	        id="btn-back-to-top"
+	        >
+	        
+	  	<i class="bi bi-arrow-up"></i>
+	</button>
+	
+  <!-- FOOTER -->
+  <footer class="container">
+    
+    <p>© 2022 Company, <a href="#">SCTV</a></p>
+  </footer>
+	<!-- 
+	<div class="container text-center">
+		 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+		  <div class="container-fluid">
+		    <a class="navbar-brand" th:href="@{/}">SCTV - SDH</a>
+		    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+		      <span class="navbar-toggler-icon"></span>
+		    </button>
+		    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+		      <ul class="navbar-nav">
+		        <li class="nav-item">
+		          <a class="nav-link active" th:href="@{/}">Trang chủ</a>
+		        </li>
+		        
+		      </ul>
+		    </div>
+		  </div>
+		</nav> 
+		<div>
+			<h1>Wel come to SDH - SCTV</h1>
+		</div>
+		<div>
+			<a th:href="@{/register}">Register</a>
+			
+		</div>
+		<div>
+			<a th:href="@{/login}">Login</a>
+		</div>
+		
+	</div>
+	 -->
+	<script type="text/javascript">
+    	var contextPath = "[[@{/}]]";
+    	var pagePath = "[[${pagePath}]]";
+    	var current = document.getElementsByClassName(pagePath);
+    	
+        current[0].className += " active";
+    	
+    	var csrfHeader = "[[${_csrf.headerName}]]";
+    	var csrfToken = "[[${_csrf.token}]]";
+    </script> 
+    <script th:inline="javascript">
+	    /*<![CDATA[*/
+			var categorys = /*[[${listCategorys}]]*/ "Test";
+		/*	]]>*/
+		
+    </script>
+	
+	<script th:src="@{/js/jquery-3.5.1.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+ 
+	<!-- <script th:src="@{/js/bootstrap.bundle.min.js}"></script>  -->    
+    <script th:src="@{/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/js/dataTables.bootstrap5.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+	
+    <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/wheelzoom.js}"></script>
+    <script th:src="@{/js/index.js}"></script>
+    <script th:src="@{/js/paging.js}"></script>
+</body>
+</html>

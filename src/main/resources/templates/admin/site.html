@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>[[${pageTitle}]]</title>
+<th:block th:include = "@{admin/header}"></th:block>
+</head>
+<body>
+	<th:block th:include = "@{admin/navbar}"></th:block>
+	<th:block th:include = "@{admin/canvas}"></th:block>
+
+	<main class="mt-5 pt-3">
+        <div class="container-fluid">
+        	<div class="position-fixed top-0 end-0 p-2 alert-top" style="z-index: 9999"></div>
+        	
+            <div class="row">
+                <div class="col-md-12 fw-bold fs-3">
+                    Quản lý Sites
+                </div>
+            </div>
+
+
+            <div class="row pt-3">
+                <div class="col col-md-6">
+                    <div class="row">
+                        <div class="col col-md-12">
+                            <div class="card">
+
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-7">
+                                            <div class="row">
+                                                <label class="fw-bold">Chọn khu vực</label>
+                                                <div class="pt-2">
+                                                	<select id="selectDistrict" class="form-select form-select-sm">
+			                                            <!-- <option value="0" disabled selected>-- Chọn danh mục --</option>  -->
+			                                            <option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
+			                                 
+			                                        </select>
+                                        
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="row">
+                                                <label class="fw-bold">Chọn Site</label>
+                                                <div class="col pt-2">
+                                                    <select id="selectSite" class="form-select form-select-sm">
+			                                            <option value="0" disabled selected>-- Chọn Site --</option>
+			                                            <option th:each="site : ${sites}" th:value="${site.id}" th:text="${site.name}"></option>
+			                                 
+			                                        </select>
+			                                        <div class="invalid-feedback text-left"></div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="col col-md-6">
+                    <div class="row mt-5 float-end">
+                        <div class="col-sm-12">
+                            <button id="btnAddDevice" class="btn btn-primary" type="button">
+                                <i class="bi bi-plus-lg"></i>Thêm thiết bị</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row mt-2">
+                <div class="col col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <label class="fw-bold">Thiết bị trong Site</label>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col col-md-6">
+                                    <div class="d-flex">
+                                        <div class="p-2 ml-auto">
+                                            <label>Hiển thị</label>
+                                        </div>
+                                        <div class="p-2 ml-auto">
+                                            <select id="selectPageItem" class="form-select form-select-sm">
+                                                <option value="10">10</option>
+                                                <option value="10">15</option>
+                                                <option value="10">20</option>
+                                            </select>
+                                        </div>
+                                        <div class="p-2 ml-auto">
+                                            <label>mục</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-md-6">
+                                    <div class="row form-group">
+                                        <div class="input-group p-2 col-8">
+                                        	<input id="inputSearch" type="text" title="Nhập tên thiết bị hoặc danh mục..." placeholder="Nhập tên thiết bị hoặc danh mục..." class="form-control form-control-sm">
+                                            <button class="btn btn-primary btn-sm" type="button" id="btnSearch"><i class="bi bi-search"></i></button>
+						  					<button class="btn btn-sm btn-outline-dark ms-1" type="button" title="Xóa tìm kiếm" id="btnEraser"><i class="bi bi-eraser-fill"></i></button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row table-responsive">
+                                <table id="tableSiteInfo" class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col" class="text-center">Danh Mục</th>
+                                            <th scope="col" width="150" class="text-center">Thiết Bị</th>
+                                            <th scope="col" width="50" class="text-center">Số lượng</th>
+                                            <th scope="col" width="120" class="text-center">Serial Number</th>
+                                            <th scope="col" width="60" class="text-center">Slot</th>
+                                            <th scope="col" width="200" class="text-center">Ảnh Thiết Bị</th>
+                                            <th scope="col" width="150" class="text-center">Ghi chú</th>
+                                            <th scope="col" class="text-center">Thao tác</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    	<tr id="contentNoneData"><td colspan="9" class="text-center">Không có dữ liệu!</td><tr>
+                                    	
+                                    </tbody>
+                                </table>
+                                <ul id="pagination" class="pagination pagination-sm justify-content-end">
+                                    
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!--modal them thiet bi moi cho site-->
+        <div class="modal fade" id="modalAddDeviceSite" tabindex="-1" aria-labelledby="modalAddDeviceSiteTitle"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAddDeviceSiteTitle">Truc M1 - Sai Gon</h5>
+                        <button type="button" class="btn-close btn-close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-2 row">
+                        	<div class="row">
+	                            <label id="label_header_title" class="col-sm-4 col-form-label fw-bold">Chọn
+	                                thiết bị</label>
+	                            <p class="col-sm-6 col-form-label invalid-feedback text-left"></p>	                            
+                            </div>
+                            
+                            <div class="col-sm-12 mb-2">
+                            	<div class="col-sm-6">
+                                    <input type="text" class="form-control form-control-sm inputKeySearchDevice" placeholder="Tìm tên thiết bị ...">
+                                </div>
+                                <hr class="m-t-1 m-b-1">
+                            </div>
+                            
+                            <div class="col-sm-12">
+                                <div class="row" id="modelBodyDevicesContent">
+                                    <!-- 
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                                id="flexRadioDefault1">
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                                Default radio
+                                            </label>
+                                        </div>
+                                    </div>
+                                     -->
+
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <label for="quantityDevice" class="col-sm-3 col-form-label fw-bold">Số
+                                lượng</label>
+                            <div class="col-sm-9">
+                                <input type="number" name="number" min="1" value="1" class="form-control form-control-sm" id="quantityDevice" required>
+                                <div class="invalid-feedback text-left"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <label for="serialNumber" class="col-sm-3 col-form-label fw-bold">Serial
+                                Number</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="5" id="serialNumber" name="text"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <label for="slot" class="col-sm-3 col-form-label fw-bold">Slot</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="5" id="slot" name="text"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <label for="imageDevice" class="col-sm-3 col-form-label fw-bold">Ảnh thiết bị</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="file" id="imageDevice" accept="image/png, image/jpg, image/jpeg" multiple>
+                                
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <label for="note" class="col-sm-3 col-form-label fw-bold">Ghi
+                                chú</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="3" id="note" name="text"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary btn-sm btn-close-modal" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" id="btnAddDeviceSite" class="btn btn-primary btn-sm">
+	                        <span></span>
+	                        Thêm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end modal-->
+
+        <!-- modal edit thiet bi-->
+        <div class="modal fade" id="editModalScrollable" tabindex="-1" aria-labelledby="editModalScrollableTitle"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalScrollableTitle">Cap nhat Truc M1 - Sai Gon</h5>
+                        <button type="button" class="btn-close btn-close-edit-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-2 row">
+                            <label for="eidtDeviceName" class="col-sm-3 col-form-label fw-bold">Tên thiết bị</label>
+                            <div class="col-sm-9">
+                                <input readonly type="text" class="form-control-plaintext" id="editDeviceName"
+                                    value="XDM-1000 Shelf">
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <label for="editQuantityDevice" class="col-sm-3 col-form-label fw-bold">Số
+                                lượng</label>
+                            <div class="col-sm-9">
+                                <input type="number" min="1" value="1" class="form-control form-control-sm" id="editQuantityDevice" required>
+                                <div class="invalid-feedback text-left"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <label for="editSerialNumber" class="col-sm-3 col-form-label fw-bold">Serial
+                                Number</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="5" id="editSerialNumber" name="text"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <label for="editSlot" class="col-sm-3 col-form-label fw-bold">Slot</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="5" id="editSlot" name="text"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <label for="imageDevice" class="col-sm-3 col-form-label fw-bold">Ảnh thiết bị</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="file" id="editImageDevice" accept="image/png, image/jpg, image/jpeg" multiple>
+                            </div>
+                            <div class="mt-2 col-sm-12">
+                            	<div class="row row-container-device-image">
+                            	
+                            	</div>
+                                
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <label for="editNote" class="col-sm-3 col-form-label fw-bold">Ghi
+                                chú</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="3" id="editNote" name="text"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary btn-sm btn-close-edit-modal" data-bs-dismiss="modal">Đóng</button>
+                        
+                        <button class="btn btn-primary btn-sm btn-edit-site-info">
+							  <span></span>
+							  Cập nhật
+						</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end modal-->
+
+        <!--modal image slider-->
+
+        <!-- Modal -->
+
+        <div class="modal fade" id="showImageSliderModal" role="dialog" data-backdrop="static" data-keyboard="false"
+            tabindex="-1" aria-labelledby="showImageSliderModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="showImageSliderModalLabel">Modal title</h5>
+                        <button type="button" class="btn-close btn-close-model-slider-image" data-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="carouselExampleCaptions" class="carousel slide" data-interval="false">
+                            <div class="carousel-indicators">
+                            <!--
+                                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0"
+                                    class="active" aria-current="true" aria-label="Slide 1"></button>
+                                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+                                    aria-label="Slide 2"></button>
+                             
+                                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+                                    aria-label="Slide 3"></button>
+                                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3"
+                                    aria-label="Slide 4"></button>
+                             -->
+                            </div>
+                            <div class="carousel-inner">
+                            <!-- 
+                                <div class="carousel-item active">
+                                    <img class="d-block w-100"
+                                        src="https://images.unsplash.com/photo-1546853020-ca4909aef454?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjE0NTg5fQ"
+                                        alt="First slide">
+
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>First slide label</h5>
+                                        <p>Some representative placeholder content for the first slide.</p>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <img class="d-block w-100"
+                                        src="https://images.unsplash.com/photo-1546534505-d534e27ecb35?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjE0NTg5fQ"
+                                        alt="Second slide">
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>Second slide label</h5>
+                                        <p>Some representative placeholder content for the second slide.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="carousel-item">
+                                    <img class="d-block w-100"
+                                        src="https://images.unsplash.com/photo-1546111380-cfca9a43dd85?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjE0NTg5fQ"
+                                        alt="Third slide">
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>Third slide label</h5>
+                                        <p>Some representative placeholder content for the third slide.</p>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <img class="d-block w-100"
+                                        src="https://images.unsplash.com/photo-1547288242-f3d375fc7b5f?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjE0NTg5fQ"
+                                        alt="Fourth slide">
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>Third slide label</h5>
+                                        <p>Some representative placeholder content for the third slide.</p>
+                                    </div>
+                                </div>
+                             -->
+                            </div>
+                            <button class="carousel-control-prev" type="button"
+                                data-target="#carouselExampleCaptions" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button"
+                                data-target="#carouselExampleCaptions" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!--end modal-->
+
+    </main>
+    
+	<!-- Back to top button -->
+	<button
+	        type="button"
+	        class="btn btn-danger btn-floating btn-lg"
+	        id="btn-back-to-top"
+	        >
+	        
+	  	<i class="bi bi-arrow-up"></i>
+	</button>
+	<div class="modal-loading"></div> 
+    <script type="text/javascript">
+    	var contextPath = "[[@{/}]]";
+    	
+    	var pagePath = "[[${pagePath}]]";
+    	var pageEnd = 1;
+    	var current = document.getElementsByClassName(pagePath);
+        current[0].className += " active";
+
+    	//var csrfToken = $("meta[name='_csrf']").attr("content");
+    	//var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+    	
+    	var csrfHeader = "[[${_csrf.headerName}]]";
+    	var csrfToken = "[[${_csrf.token}]]";
+    	
+    	
+    </script> 
+    <script th:inline="javascript">
+	    /*<![CDATA[*/
+			var categorys = /*[[${listCategorys}]]*/ "Test";
+		/*	]]>*/
+		
+    </script>
+    
+    <!-- <th:block th:include = "@{admin/footer}"></th:block> -->
+    <script th:src="@{/js/jquery-3.5.1.js}"></script> 
+	<script th:src="@{/js/bootstrap.min.js}"></script> 
+	<!-- <script th:src="@{/js/bootstrap.bundle.min.js}"></script>  -->
+    <script th:src="@{/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/js/dataTables.bootstrap5.min.js}"></script>
+    <script th:src="@{/js/script.js}"></script>
+    <script type="text/javascript" th:src="@{/js/sites.js}"></script>
+    <script th:src="@{/js/alerts.js}"></script>
+    <script th:src="@{/js/paging.js}"></script>
+
+</body>
+</html>

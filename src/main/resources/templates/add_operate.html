@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>[[${pageTitle}]] - SDH</title>
+<th:block th:include = "@{header}"></th:block>
+<link th:href="@{/css/mystyle.css}" rel="stylesheet">
+</head>
+<body>
+	
+  	<th:block th:include = "@{navbar}"></th:block>	
+
+  	<th:block th:include = "@{banner}"></th:block>
+
+  	<main class="container">
+  		<div class="d-flex align-items-center p-3 my-3 text-white bg-header rounded shadow-sm">
+		  	<div class="lh-1">
+		      <a class="btn btn-success btn-sm" th:href="@{/operate}"><< Quay lại</a>		      
+		    </div>
+		  	<div class="lh-1 ms-2">
+		      <h1 class="h5 mb-0 text-red lh-2">Thêm mới thống kê</h1>
+		      
+		    </div>
+	  	</div>
+  		<div th:if="${msg}">
+  			<div class="alert alert-danger mb-2">
+  			<th:block th:each="message : ${msg}">
+				<p class="msg-error" th:text="${message}">
+			</div>
+			</th:block>
+		</div>
+		
+		<form id="formOperate" th:action="@{/operate/do_add}" method="post"><!-- onsubmit="return form_validate()" -->
+		<div class="mb-3 row">
+			<div class="col col-md-4">
+				<label for="selectAddCableType" class="fw-bold">Chọn loại cáp</label>
+	  			<select id="selectAddCableType" class="form-select form-select-sm">
+					<option th:each="cableType : ${listCableTypes}" th:value="${cableType.id}" th:text="${cableType.name}"></option>
+				</select>
+			</div>
+			
+			<div class="col col-md-4">
+				<label for="selectCableLink" class="fw-bold">Chọn tuyến</label>
+	  			<select id="selectCableLink" class="form-select form-select-sm" name="cableLink">
+					<option th:each="cableLink : ${listCableLinks}" th:value="${cableLink.id}" th:text="${cableLink.name}"></option>
+				</select>
+			</div>
+			
+			<div class="col col-md-4">
+				<label for="selectEvent" class="fw-bold">Loại event</label>
+	  			<select id="selectEvent" class="form-select form-select-sm" name="event">
+					<option th:each="event : ${listEvents}" th:value="${event.id}" th:text="${event.name}"></option>
+				</select>
+			</div>
+		</div>
+		<div class="mb-3 row">
+			<div class="col col-md-3">
+				<label for="startTime" class="fw-bold">Thời gian bắt đầu</label>
+				<input type="datetime-local" placeholder="Nhập thời gian bắt đầu" name="startTime" id="startTime">
+				<div class="invalid-feedback text-left"></div>
+			</div>
+			
+			<div class="col col-md-3">
+				<label for="endTime" class="fw-bold">Thời gian kết thúc</label>
+				<input type="datetime-local" placeholder="Nhập thời gian kết thúc" name="endTime" id="endTime">
+				<div class="invalid-feedback text-left"></div>
+			</div>
+			
+			<div class="col col-md-3">
+				<label for="processingTime" class="fw-bold">Thời gian diễn ra</label>
+				<input type="text" disabled="disabled" id="processingTime" value="NaN">
+				<div class="invalid-feedback text-left"></div>
+			</div>
+			
+			<div class="col col-md-3">
+				<label for="selectStatus" class="fw-bold">Tình trạng</label>
+				<select id="selectStatus" class="form-select form-select-sm" name="status">
+					<option th:each="st : ${listStatus}" th:value="${st.id}" th:text="${st.name}"></option>
+				</select>
+			</div>
+		</div>
+		<fieldset class="scheduler-border">
+			<legend class="scheduler-border">Dịch vụ ảnh hưởng</legend>
+			<div class="mb-3 row">
+				<div class="col col-md-4">
+					<label for="selectServiceInternal" class="fw-bold">Nội bộ</label>
+			  		<select id="selectServiceInternal" class="form-select form-select-sm" name="serviceInternal">
+						<option th:each="internal : ${listServiceInternals}" th:value="${internal.id}" th:text="${internal.name}"></option>
+					</select>
+				</div>
+					
+				<div class="col col-md-4">
+					<label for="selectServiceCustomer" class="fw-bold">Khách hàng</label>
+					<select id="selectServiceCustomer" class="form-select form-select-sm" name="serviceCustomer">
+						<option th:each="customer : ${listServiceCustomers}" th:value="${customer.id}" th:text="${customer.name}"></option>
+					</select>
+				</div>
+					
+				<div class="col col-md-4">
+					<label for="selectServiceBackbone" class="fw-bold">Trục SDH</label>
+					<select id="selectServiceBackbone" class="form-select form-select-sm" name="serviceBackbone">
+						<option th:each="backbone : ${listServiceBackbones}" th:value="${backbone.id}" th:text="${backbone.name}"></option>
+					</select>
+				</div>
+			</div>
+				
+		</fieldset>
+		<div class="mb-3 row">
+			<div class="col col-md-12">
+				<label for="note" class="fw-bold">Ghi chú</label>
+				<textarea class="form-control" rows="5" name="note" id="note"></textarea>
+				<div class="invalid-feedback text-left"></div>
+			</div>
+			
+		</div>
+  		<div class="mb-3 row"> 
+  			<div class="offset-sm-3">
+				<button type="button" id="btnAddOperational" class="btn btn-primary"><span></span>Thêm</button>
+				<button type="reset" id="btnReset" class="btn btn-dark">Bỏ qua</button>
+			</div>
+		</div>
+  		</form>
+  		
+  		<!-- Modal -->
+		<div class="modal fade" id="notiModal" tabindex="-1" aria-labelledby="notiModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title text-warning" id="notiModalLabel"><i class="bi bi-exclamation-triangle"></i>Warning</h5>
+		        <button type="button" class="btn-close btn-close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+		        <span id="messageContent"></span>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary btn-close-modal" data-bs-dismiss="modal">Đóng</button>
+		        <button type="button" id="btnOk" class="btn btn-primary">Tiếp tục</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+  		
+  		
+	</main>
+
+	<button
+	        type="button"
+	        class="btn btn-danger btn-floating btn-lg"
+	        id="btn-back-to-top"
+	        >
+	        
+	  	<i class="bi bi-arrow-up"></i>
+	</button>
+	
+	<!-- FOOTER -->
+	<footer class="container">
+	    
+		<p>© 2022 Company, <a href="#">SCTV</a></p>
+	</footer>
+	
+	<script type="text/javascript">
+    	var contextPath = "[[@{/}]]";
+    	var pagePath = "[[${pagePath}]]";
+    	var current = document.getElementsByClassName(pagePath);
+        current[0].className += " active";
+    	
+    	var csrfHeader = "[[${_csrf.headerName}]]";
+    	var csrfToken = "[[${_csrf.token}]]";
+    </script> 
+    <script th:inline="javascript">
+	    /*<![CDATA[*/
+			var categorys = /*[[${listCategorys}]]*/ "Test";
+		/*	]]>*/
+		
+    </script>
+	
+	<script th:src="@{/js/jquery-3.5.1.js}"></script> 
+	<script th:src="@{/js/bootstrap.min.js}"></script> 
+	<!-- <script th:src="@{/js/bootstrap.bundle.min.js}"></script>  -->    
+    <script th:src="@{/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/js/dataTables.bootstrap5.min.js}"></script>
+    <script th:src="@{/js/jquery.validate.min.js}"></script>
+    <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/fullcalendar.min.js}"></script>
+    <script th:src="@{/js/operate.js}"></script>
+</body>
+</html>

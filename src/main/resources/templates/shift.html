@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>[[${pageTitle}]] - SDH</title>
+<th:block th:include = "@{header}"></th:block>
+<link th:href="@{/css/mystyle.css}" rel="stylesheet">
+</head>
+<body>
+	<th:block th:include = "@{navbar}"></th:block>
+  	<th:block th:include = "@{banner}"></th:block>
+  	<main class="container">
+	  	<div class="position-fixed top-0 end-0 p-2 alert-top" style="z-index: 9999"></div>
+	  	
+	  	<div class="d-flex align-items-center p-3 my-3 text-white bg-header rounded shadow-sm">
+		  	<div class="lh-1">
+		      <h1 class="h5 mb-0 text-red lh-2">MT - Giao ca</h1>
+		      
+		    </div>
+	  	</div>
+	  	
+	  	<form id="formShift" th:action="@{/shift}" method="post"><!-- onsubmit="return form_validate()" -->
+	  		<div class="mb-3 row">
+				<div class="col col-md-4">
+					<label for="selectAction" class="fw-bold">Chọn sự kiện</label>
+		  			<select id="selectAction" class="form-select form-select-sm">
+						<option value="0">Không sự cố</option>
+						<option value="1">Có sự kiện</option>
+					</select>
+					
+					<textarea class="form-control mt-1" style="display: none;" rows="5" name="noteAction" id="noteAction"></textarea>
+					<div class="invalid-feedback text-left"></div>
+				</div>			
+				
+			</div>
+			<fieldset class="scheduler-border col col-md-6">
+				<legend class="scheduler-border">Kiểm tra</legend>
+				<div class="mb-3 row">
+					<div class="form-check">
+					  <input class="form-check-input list-check" type="checkbox" value="checkMetro" name="checkAction" id="check1">
+					  <label class="form-check-label" id="lbl_check1" for="check1">
+					    Metro MĐ
+					  </label>
+					  
+					</div>
+					<div class="form-check">
+					  <input class="form-check-input list-check" type="checkbox" value="checkHW" name="checkAction" id="check2">
+					  <label class="form-check-label" id="lbl_check2" for="check2">
+					    Truyền dẫn HW HCM - DNG
+					  </label>
+					</div>
+					<div class="form-check">
+					  <input class="form-check-input list-check" type="checkbox" value="checkM1" name="checkAction" id="check3">
+					  <label class="form-check-label" id="lbl_check3" for="check3">
+					    Trục M1 HCM - DNG
+					  </label>
+					</div>
+					<div class="form-check">
+					  <input class="form-check-input list-check" type="checkbox" value="checkM2" name="checkAction" id="check4">
+					  <label class="form-check-label" id="lbl_check4" for="check4">
+					    Trục M2 HCM - DNG
+					  </label>
+					</div>
+					<div class="form-check">
+					  <input class="form-check-input list-check" type="checkbox" value="checkDS" name="checkAction" id="check5">
+					  <label class="form-check-label" id="lbl_check5" for="check5">
+					    Tuyến cáp ĐS HCM - DNG
+					  </label>
+					</div>
+					<div class="form-check">
+					  <input class="form-check-input list-check" type="checkbox" value="checkMetroCS" name="checkAction" id="check6">
+					  <label class="form-check-label" id="lbl_check6" for="check6">
+					    Check hệ thống cs Metro
+					  </label>
+					</div>
+					<div class="form-check">
+					  <input class="form-check-input list-check" type="checkbox" value="checkSystemCS" name="checkAction" id="check7">
+					  <label class="form-check-label" id="lbl_check7" for="check7">
+					    Check hệ thống cs HCM - DNG
+					  </label>
+					</div>
+					<div class="form-check">
+					  <input class="form-check-input list-check" type="checkbox" value="checkMBF" name="checkAction" id="check8">
+					  <label class="form-check-label" id="lbl_check8" for="check8">
+					    Mobifone
+					  </label>
+					</div>
+					<div class="form-check">
+					  <input class="form-check-input list-check" type="checkbox" value="checkCSKH" name="checkAction" id="check9">
+					  <label class="form-check-label" id="lbl_check9" for="checkCSKH">
+					    Chăm sóc khách hàng
+					  </label>
+					</div>
+				</div>
+			</fieldset>
+			<div class="mb-3">
+				<div class="col col-md-6">
+					<label for="note" class="fw-bold">Ghi chú</label>
+					<textarea class="form-control" rows="5" name="note" id="note"></textarea>
+					<div class="invalid-feedback text-left"></div>
+				</div>
+				
+			</div>
+			<div class="mb-3"> 
+	  			<div class="col col-md-6 text-center">
+					<button type="button" id="btnAddShift" class="btn btn-primary"><span></span>Giao ca</button>
+					<button type="reset" id="btnReset" class="btn btn-dark">Bỏ qua</button>
+				</div>
+			</div>
+	  	</form>
+  	
+	</main>
+	
+	<button
+	        type="button"
+	        class="btn btn-danger btn-floating btn-lg"
+	        id="btn-back-to-top"
+	        >
+	        
+	  	<i class="bi bi-arrow-up"></i>
+	</button>
+	
+  <!-- FOOTER -->
+  <footer class="container">
+    
+    <p>© 2022 Company, <a href="#">SCTV</a></p>
+  </footer>
+	
+	<script type="text/javascript">
+    	var contextPath = "[[@{/}]]";
+    	var pagePath = "[[${pagePath}]]";
+    	var current = document.getElementsByClassName(pagePath);
+        current[0].className += " active";
+    	
+    	var csrfHeader = "[[${_csrf.headerName}]]";
+    	var csrfToken = "[[${_csrf.token}]]";
+    </script> 
+    <script th:inline="javascript">
+	    /*<![CDATA[*/
+			var categorys = /*[[${listCategorys}]]*/ "Test";
+		/*	]]>*/
+		
+    </script>
+	 
+	<script th:src="@{/js/jquery-3.5.1.js}"></script> 
+	<script th:src="@{/js/bootstrap.min.js}"></script> 
+	<!-- <script th:src="@{/js/bootstrap.bundle.min.js}"></script>  -->
+    <script th:src="@{/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/js/dataTables.bootstrap5.min.js}"></script>
+    <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/shift.js}"></script>
+    <script th:src="@{/js/paging.js}"></script>
+</body>
+</html>

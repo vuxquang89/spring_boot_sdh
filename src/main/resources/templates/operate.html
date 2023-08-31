@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>[[${pageTitle}]] - SDH</title>
+<th:block th:include = "@{header}"></th:block>
+<link rel="stylesheet" type="text/css" th:href="@{/css/fullcalendar.min.css}">
+<link th:href="@{/css/mystyle.css}" rel="stylesheet">
+</head>
+<body>
+	
+  <th:block th:include = "@{navbar}"></th:block>	
+
+  <th:block th:include = "@{banner}"></th:block>
+
+  <main class="container">
+  	<div class="position-fixed top-0 end-0 p-2 alert-top" style="z-index: 9999"></div>
+  	
+  	<div class="d-flex align-items-center p-3 my-3 text-white bg-header rounded shadow-sm">
+	  	<div class="lh-1">
+	      <h1 class="h5 mb-0 text-red lh-2">Thống kê vận hành</h1>
+	      
+	    </div>
+  	</div>
+  	
+  	<div class="row mt-4">
+  		<div class="col-md-6">
+  		    <a class="btn btn-primary btn-sm" th:href="@{/operate/add}" title="Thêm mới">
+            	<i class="bi bi-plus"></i>
+            	Thêm mới
+            </a>
+  			<button class="btn btn-primary btn-sm">Xuất Excel</button>
+            	
+  		</div>
+  		<div class="col-md-2">
+  			<div><div class='box yellow'></div>Dời lịch</div>
+  			<div><div class='box blue'></div>Hoàn thành</div>
+  		</div>
+  		<div class="col-md-2">
+  			<div><div class='box red'></div>Xử lý quá giờ</div>
+  			<div><div class='box orange'></div>Kế hoạch dự kiến</div>
+  		</div>
+  	</div>
+  	<hr>
+  	
+  	<div class="mt-4 mb-4" id="calendar"></div>
+  
+  	<!--modal info event-->
+    <div class="modal fade" id="modalInfoEvent" tabindex="-1" aria-labelledby="modalInfoEventTitle"
+            style="display: none;" aria-hidden="true">
+    	<div class="modal-dialog modal-dialog-scrollable">
+        	<div class="modal-content">
+            	<div class="modal-header">
+					<h5 class="modal-title" id="modalInfoEventTitle"></h5>
+                    <button type="button" class="btn-close btn-close-modal" onclick="closeModel()" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                        
+						<input type="hidden" id="operateId">
+                        <div class="mb-2 row">
+                            <div class="col col-md-6">
+								<label for="startTime" class="fw-bold">Thời gian bắt đầu</label>
+								<input type="text" class="form-control form-control-sm" id="startTime" disabled="disabled">
+							</div>
+							
+							<div class="col col-md-6">
+								<label for="endTime" class="fw-bold">Thời gian kết thúc</label>
+								<input type="text" class="form-control form-control-sm" id="endTime" disabled="disabled">
+								
+							</div>
+                        </div>
+                        <div class="mb-2 row">
+                        	<div class="col col-md-6">
+                        		<label for="processingTime" class="fw-bold">Thời gian xử lý</label>
+								<input type="text" class="form-control form-control-sm" id="processingTime" disabled="disabled">
+							</div>
+							
+							<div class="col col-md-6">
+								<label for="status" class="fw-bold">Trạng thái</label>
+								<input type="text" class="form-control form-control-sm" id="status" disabled="disabled">
+								
+							</div>
+                            
+                        </div>
+                        
+                        
+		             <div class="mb-2 row">
+                            <label for="note" class="col-sm-3 col-form-label fw-bold">Ghi
+                                chú</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="3" id="note" name="text"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary btn-sm btn-close-modal" onclick="closeModel()" data-bs-dismiss="modal">Đóng</button>
+                        <a id="btnViewInfo" class="btn btn-primary btn-sm" href="#">
+	                        Xem chi tiết
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end modal-->
+</main>
+
+	<button
+	        type="button"
+	        class="btn btn-danger btn-floating btn-lg"
+	        id="btn-back-to-top"
+	        >
+	        
+	  	<i class="bi bi-arrow-up"></i>
+	</button>
+	
+  <!-- FOOTER -->
+  <footer class="container">
+    
+    <p>© 2022 Company, <a href="#">SCTV</a></p>
+  </footer>
+	
+	<script type="text/javascript">
+    	var contextPath = "[[@{/}]]";
+    	var pagePath = "[[${pagePath}]]";
+    	var current = document.getElementsByClassName(pagePath);
+        current[0].className += " active";
+    	
+    	var csrfHeader = "[[${_csrf.headerName}]]";
+    	var csrfToken = "[[${_csrf.token}]]";
+    </script> 
+    <script th:inline="javascript">
+	    /*<![CDATA[*/
+			var categorys = /*[[${listCategorys}]]*/ "Test";
+		/*	]]>*/
+		
+    </script>
+	 
+	<script th:src="@{/js/jquery-3.5.1.js}"></script> 
+	<script th:src="@{/js/bootstrap.min.js}"></script> 
+	<!-- <script th:src="@{/js/bootstrap.bundle.min.js}"></script>  -->
+    <script th:src="@{/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/js/dataTables.bootstrap5.min.js}"></script>
+    <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/fullcalendar.min.js}"></script>
+    <script th:src="@{/js/calendar.js}"></script>
+    <script th:src="@{/js/operate.js}"></script>
+    <script th:src="@{/js/paging.js}"></script>
+</body>
+</html>

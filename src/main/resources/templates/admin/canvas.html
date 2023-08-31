@@ -1,0 +1,59 @@
+<!-- offcanvas -->
+
+<div class="offcanvas offcanvas-start bg-dark text-white sidebar-nav" tabindex="-1" id="offcanvasExample"
+        aria-labelledby="offcanvasExampleLabel">
+
+        <div class="offcanvas-body p-0">
+            <nav class="navbar-dark">
+                <ul class="navbar-nav">
+                    <li>
+                        <div class="text-muted small fw-bold text-uppercase px-3">Thành phần</div>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin}" class="nav-link px-3 dasboard">
+                            <span class="me-2"><i class="bi bi-speedometer2"></i></span>
+                            <span>Khu vực</span>
+                        </a>
+                    </li>
+                    
+                    <li class="my-4">
+                        <hr class="dropdown-divider">
+                    </li>
+
+					<li>
+                        <div class="text-muted small fw-bold text-uppercase px-3">Vật tư</div>
+                    </li>
+                    
+                    <li>
+                        <a th:href="@{/admin/category}" class="nav-link px-3 category">
+                        	<span class="me-2"><i class="bi bi-card-checklist"></i></span>
+                            <span>Danh mục</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a th:href="@{/admin/device}" class="nav-link px-3 device">
+                        	<span class="me-2"><i class="bi bi-card-checklist"></i></span>
+                            <span>Thiết bị</span>
+                        </a>
+                    </li>
+					
+                    
+                    <li class="my-4">
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                        <div class="text-muted small fw-bold text-uppercase px-3">Quản lý</div>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin/site}" class="nav-link px-3 site">
+                            <span class="me-2"><i class="bi bi-speedometer2"></i></span>
+                            <span>Sites</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!-- end offcanvas -->
