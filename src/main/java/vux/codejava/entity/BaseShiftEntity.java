@@ -1,6 +1,6 @@
 package vux.codejava.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
@@ -29,7 +29,7 @@ public abstract class BaseShiftEntity {
 	
 	@Column(name = "date_shift")
 	@CreatedDate
-	private Date dateShift;
+	private LocalDateTime dateShift;
 	
 	@Column(name = "user_receive")
 	@LastModifiedBy //get user login
@@ -37,7 +37,7 @@ public abstract class BaseShiftEntity {
 	
 	@Column(name = "date_receive")
 	@LastModifiedDate //get from system
-	private Date dateReceive;
+	private LocalDateTime dateReceive;
 
 	public Long getId() {
 		return id;
@@ -55,11 +55,11 @@ public abstract class BaseShiftEntity {
 		this.userShift = userShift;
 	}
 
-	public Date getDateShift() {
+	public LocalDateTime getDateShift() {
 		return dateShift;
 	}
 
-	public void setDateShift(Date dateShift) {
+	public void setDateShift(LocalDateTime dateShift) {
 		this.dateShift = dateShift;
 	}
 
@@ -71,11 +71,11 @@ public abstract class BaseShiftEntity {
 		this.userReceive = userReceive;
 	}
 
-	public Date getDateReceive() {
+	public LocalDateTime getDateReceive() {
 		return dateReceive;
 	}
 
-	public void setDateReceive(Date dateReceive) {
+	public void setDateReceive(LocalDateTime dateReceive) {
 		this.dateReceive = dateReceive;
 	}
 	

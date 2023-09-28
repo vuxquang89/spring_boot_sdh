@@ -170,6 +170,49 @@ p.invalid-feedback{
 	margin-bottom: 0.25rem;
 }
 
+.disabled{
+    position: relative;
+}
+.disabled:after{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: inherit;
+    background-color: rgba(0,0,0,0.1);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/*-----------loading page---------*/
+#overlay{
+	position: fixed;
+	top:0;
+	z-index: 1100;
+	width:100%;
+	height:100%;
+	display:none;
+	background:rgba(0,0,0,0.6);
+}
+
+.cv-spinner{
+	height:100%;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+}
+
+.spinner{
+	width:40px;
+	height:40px;
+	border:4px #ddd solid;
+	border-top:4px #2e93e6 solid;
+	border-radius:50%;
+	animation:sp-anime 0.8s infinite linear;
+}
+/*----------end loading page------*/
+
 /* hide scrollbar but allow scrolling */
 #showImageSliderModal {
   -ms-overflow-style: none; /* for Internet Explorer, Edge */

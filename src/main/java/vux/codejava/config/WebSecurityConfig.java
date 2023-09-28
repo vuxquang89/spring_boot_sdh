@@ -51,7 +51,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		//trang userInfo yeu cau pahi login voi vai tro ROLE_USER hoac ROLE_ADMIN
 		//neu chua login, se chuyen redirect toi trang login
-		http.authorizeHttpRequests().antMatchers("/user/**", "/operate/**", "/profile").hasAnyAuthority("ROLE_ADMIN","ROLE_USER", "ROLE_ROOT");
+		http.authorizeHttpRequests().antMatchers("/user/**", 
+				"/operate/**", 
+				"/profile",
+				"/shift").hasAnyAuthority("ROLE_ADMIN","ROLE_USER", "ROLE_ROOT");
 		
 		//trang chi danh cho ADMIN
 		http.authorizeHttpRequests().antMatchers("/admin", "/admin/**").hasAnyAuthority("ROLE_ROOT", "ROLE_ADMIN");

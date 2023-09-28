@@ -1,9 +1,9 @@
 package vux.codejava.lib;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +59,27 @@ public class Convert {
 		return m;
 	}
 	
+	public static long convertToMinutes(LocalDateTime from, LocalDateTime to) {
+		//long hours = ChronoUnit.HOURS.between(shift.getDateReceive(), shift.getDateShift());
+        long t = ChronoUnit.MINUTES.between(from, to);
+        return t;
+	}
+	
+	public static String convertToHoursMinutes(long t) {
+		int hours   = (int)t / 60;   // since both are ints, you get an int
+        int minutes = (int)t % 60;
+        return hours + "h" + minutes;
+	}
+	
+	public static String[] convertStringToMonthYear(String month) {
+		String[] months = month.split("-");
+		if(months[0].length() < 4) {
+			String swap = months[0];
+			months[0] = months[1];
+			months[0] = swap;
+		}
+		return months;
+	}
 	
 	//https://www.digitalocean.com/community/tutorials/spring-validation-example-mvc-validator
 }
