@@ -1,5 +1,7 @@
 package vux.codejava.repository;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("SELECT u FROM users u where u.username = ?1")
 	User findByUsername(String username);
+
+	public  Optional<User> findByEmail(String email);
 	
 	@Transactional
 	@Modifying

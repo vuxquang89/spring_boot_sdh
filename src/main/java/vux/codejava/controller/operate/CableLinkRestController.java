@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import vux.codejava.entity.CustomUserDetails;
 import vux.codejava.entity.operate.CableLink;
 import vux.codejava.service.operate.CableLinkServices;
+import vux.codejava.util.PrincipalObject;
 
 @RestController
 @RequestMapping(value="/api")
@@ -21,12 +22,15 @@ public class CableLinkRestController {
 
 	@Autowired
 	private CableLinkServices cableLinkServices;
+	@Autowired
+	private PrincipalObject principalObject;
 	
 	@GetMapping("/operate/cablelink/list/add/{id}")
 	public ResponseEntity<List<CableLink>> getAddCableLink(
 			@PathVariable("id") Long cableTypeId,
 			Principal principal){
-		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+//		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+		CustomUserDetails userDetails = principalObject.getCustomUserDetails(principal);
 		System.out.println("REST API CableLink....");
 		System.out.println(cableTypeId);
 		List<CableLink> listCableLink;

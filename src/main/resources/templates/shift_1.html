@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>[[${pageTitle}]] - SDH</title>
+<th:block th:include = "@{header}"></th:block>
+<link th:href="@{/css/mystyle.css}" rel="stylesheet">
+</head>
+
+<body>
+	<th:block th:include = "@{navbar}"></th:block>
+  	<th:block th:include = "@{banner}"></th:block>
+  	<main class="container">
+	  	<div class="position-fixed top-0 end-0 p-2 alert-top" style="z-index: 9999"></div>
+		<div class="row">
+			<div class="col-md-6 p-3">
+	  			<button class="btn btn-info btn-sm text-white" data-toggle="modal" data-target="#showExportExcelModal">Xuất Excel</button>	
+	  		</div>
+		</div>
+	  	<div class="row">
+			<div class="col-md-6">
+				<div class="d-flex align-items-center p-3 my-3 text-white bg-header rounded shadow-sm col-md-12">
+				  	<div class="lh-1">
+						<form method="post" th:action="@{/shift/action}">
+						  <input type="hidden" name="district" value="MT"/>
+				
+					      <h2 class="h5 mb-0 text-red lh-2">MT - 
+					      <th:block th:if="${shiftMT.status}">
+							Giao ca <th:block th:text="'( ' + ${shiftMT.username} + ' )'"/>
+					      </th:block>
+						  <th:block th:unless="${shiftMT.status}">
+							<th:block th:if="${shiftMT.district == district || district == 'SG'}">
+								<th:block th:if="${district == 'SG'}">
+									<th:block th:if="${statusSG}">
+										Nhận ca
+									</th:block>
+									<th:block th:unless="${statusSG}">
+										<button class="btn btn-primary btn-sm">Nhận ca</button>
+									</th:block>
+								</th:block>
+								<th:block th:unless="${district == 'SG'}">
+										<button class="btn btn-primary btn-sm">Nhận ca</button>
+								</th:block>
+							</th:block>
+							<th:block th:unless="${shiftMT.district == district || district == 'SG'}">
+								Nhận ca
+							</th:block>
+					      </th:block>
+						  </h2>
+						 
+						</form>
+				    </div>
+			  	</div>
+			
+		  	<form id="formShift_MT" th:action="@{/shift}" method="post" th:class="${shiftMT.form} ? 'disabled' : ''"><!-- onsubmit="return form_validate()" -->
+			  	
+		  		<!-- form MT-->
+		  		<input type="hidden" name="district" value="MT"/>
+		  		<div class="mb-3 row">
+					<div class="col col-md-6">
+						<label for="selectAction" class="fw-bold">Chọn sự kiện</label>
+			  			<select id="selectAction" th:field="*{shiftMT.action}" name="action" class="form-select form-select-sm">
+							<option value="0">Không sự cố</option>
+							<option value="1">Có sự kiện</option>
+						</select>
+						
+						<textarea class="form-control mt-1" th:style="${shiftMT.action == 0} ? 'display: none;' : ''" 
+							rows="5" name="noteAction" id="noteAction" th:text="${shiftMT.shiftEntity.noteAction}"></textarea>
+						<div class="invalid-feedback text-left"></div>
+					</div>			
+					
+				</div>
+				<fieldset class="scheduler-border col col-md-6">
+					<legend class="scheduler-border">Kiểm tra</legend>
+					<div class="mb-3 row">
+						<div class="form-check">
+						  <input class="form-check-input list-check" type="checkbox" value="checkMetro" name="checkAction" id="check1">
+						  <label class="form-check-label" id="lbl_check1" for="check1">
+						    Metro MĐ
+						  </label>
+						  
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check" type="checkbox" value="checkHW" name="checkAction" id="check2">
+						  <label class="form-check-label" id="lbl_check2" for="check2">
+						    Truyền dẫn HW HCM - DNG
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check" type="checkbox" value="checkM1" name="checkAction" id="check3">
+						  <label class="form-check-label" id="lbl_check3" for="check3">
+						    Tuyến cáp M1 HCM - DNG
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check" type="checkbox" value="checkM2" name="checkAction" id="check4">
+						  <label class="form-check-label" id="lbl_check4" for="check4">
+						    Tuyến cáp M2 HCM - DNG
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check" type="checkbox" value="checkDS" name="checkAction" id="check5">
+						  <label class="form-check-label" id="lbl_check5" for="check5">
+						    Tuyến cáp ĐS HCM - DNG
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check" type="checkbox" value="checkMetroCS" name="checkAction" id="check6">
+						  <label class="form-check-label" id="lbl_check6" for="check6">
+						    Check hệ thống cs Metro
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check" type="checkbox" value="checkSystemCS" name="checkAction" id="check7">
+						  <label class="form-check-label" id="lbl_check7" for="check7">
+						    Check hệ thống cs HCM - DNG
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check" type="checkbox" value="checkMBF" name="checkAction" id="check8">
+						  <label class="form-check-label" id="lbl_check8" for="check8">
+						    Mobifone
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check" type="checkbox" value="checkCSKH" name="checkAction" id="check9">
+						  <label class="form-check-label" id="lbl_check9" for="check9">
+						    Chăm sóc khách hàng
+						  </label>
+						</div>
+					</div>
+				</fieldset>
+				<div class="mb-3">
+					<div class="col col-md-12">
+						<label for="note" class="fw-bold">Ghi chú</label>
+						<textarea class="form-control" rows="5" name="note" id="note" th:text="${shiftMT.shiftEntity.note}"></textarea>
+						<div class="invalid-feedback text-left"></div>
+					</div>
+					
+				</div>
+				<div class="mb-3"> 
+		  			<div class="col col-md-6 text-center">
+					<th:block th:if="${shiftMT.form == false}">
+						<button type="button" id="btnAddShift" class="btn btn-primary"><span></span>Giao ca</button>
+						<button type="reset" id="btnReset" class="btn btn-dark">Bỏ qua</button>
+					</th:block>
+					</div>
+				</div>
+		  	</form>
+			
+			</div>
+			<!-- form MB -->
+	  		<div class="col-md-6 ">
+				<div class="d-flex align-items-center p-3 my-3 text-white bg-header rounded shadow-sm col-md-12">
+				  	<div class="lh-1">
+						<form method="post" th:action="@{/shift/action}">
+						  <input type="hidden" name="district" value="MB"/>
+					      <h2 class="h5 mb-0 text-red lh-2">MB - 
+					      <th:block th:if="${shiftMB.status}">
+							Giao ca <th:block th:text="'( ' + ${shiftMB.username} + ' )'"/>
+					      </th:block>
+						  <th:block th:unless="${shiftMB.status}">
+							<th:block th:if="${shiftMB.district == district || district == 'SG'}">
+								<th:block th:if="${district == 'SG'}">
+									<th:block th:if="${statusSG}">
+										Nhận ca
+									</th:block>
+									<th:block th:unless="${statusSG}">
+										<button class="btn btn-primary btn-sm">Nhận ca</button>
+									</th:block>
+								</th:block>
+								<th:block th:unless="${district == 'SG'}">
+										<button class="btn btn-primary btn-sm">Nhận ca</button>
+								</th:block>
+								
+							</th:block>
+							<th:block th:unless="${shiftMB.district == district || district == 'SG'}">
+								Nhận ca
+							</th:block>
+					      </th:block>
+						  </h2>
+						</form>
+				    </div>
+			  	</div>
+			
+	  		<form id="formShift_MB" th:action="@{/shift}" method="post" th:class="${shiftMB.form} ? 'disabled' : ''"><!-- onsubmit="return form_validate()" -->
+			  	
+		  		<input type="hidden" name="district" value="MB"/>
+		  	
+		  		<div class="mb-3 row">
+					<div class="col col-md-6">
+						<label for="selectAction_MB" class="fw-bold">Chọn sự kiện</label>
+			  			<select id="selectAction_MB" th:field="*{shiftMB.action}" name="action" class="form-select form-select-sm">
+							<option value="0">Không sự cố</option>
+							<option value="1">Có sự kiện</option>
+						</select>
+						
+						<textarea class="form-control mt-1" th:style="${shiftMB.action == 0} ? 'display: none;' : ''"
+							 rows="5" name="noteAction" id="noteAction_MB" th:text="${shiftMB.shiftEntity.noteAction}"></textarea>
+						<div class="invalid-feedback text-left"></div>
+					</div>			
+					
+				</div>
+				<fieldset class="scheduler-border col col-md-6">
+					<legend class="scheduler-border">Kiểm tra</legend>
+					<div class="mb-3 row">
+						<div class="form-check">
+						  <input class="form-check-input list-check-MB" type="checkbox" value="MB_checkMetro" name="MB_checkAction" id="MB_check1">
+						  <label class="form-check-label" id="lbl_MB_check1" for="MB_check1">
+						    Metro MT
+						  </label>
+						  
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check-MB" type="checkbox" value="MB_checkHW1" name="MB_checkAction" id="MB_check2">
+						  <label class="form-check-label" id="lbl_MB_check2" for="MB_check2">
+						    Truyền dẫn HW HCM - CTO
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check-MB" type="checkbox" value="MB_checkHW2" name="MB_checkAction" id="MB_check3">
+						  <label class="form-check-label" id="lbl_MB_check3" for="MB_check3">
+						    Truyền dẫn HW HNI - DNG
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check-MB" type="checkbox" value="MB_checkM1" name="MB_checkAction" id="MB_check4">
+						  <label class="form-check-label" id="lbl_MB_check4" for="MB_check4">
+						    Tuyến cáp M1 HNI - DNG
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check-MB" type="checkbox" value="MB_checkM2" name="MB_checkAction" id="MB_check5">
+						  <label class="form-check-label" id="lbl_MB_check5" for="MB_check5">
+						    Tuyến cáp M2 HNI - DNG
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check-MB" type="checkbox" value="MB_checkDS" name="MB_checkAction" id="MB_check6">
+						  <label class="form-check-label" id="lbl_MB_check6" for="MB_check6">
+						    Tuyến cáp ĐS HNI - DNG
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check-MB" type="checkbox" value="MB_checkMetroCS" name="MB_checkAction" id="MB_check7">
+						  <label class="form-check-label" id="lbl_MB_check7" for="MB_check7">
+						    Check hệ thống cs Metro
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check-MB" type="checkbox" value="MB_checkSystemCS" name="MB_checkAction" id="MB_check8">
+						  <label class="form-check-label" id="lbl_MB_check8" for="MB_check8">
+						    Check hệ thống cs HW HNI - DNG
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check-MB" type="checkbox" value="MB_checkMBF" name="MB_checkAction" id="MB_check9">
+						  <label class="form-check-label" id="lbl_MB_check9" for="MB_check9">
+						    Mobifone
+						  </label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input list-check-MB" type="checkbox" value="MB_checkCSKH" name="MB_checkAction" id="MB_check10">
+						  <label class="form-check-label" id="lbl_MB_check10" for="MB_check10">
+						    Chăm sóc khách hàng
+						  </label>
+						</div>
+					</div>
+				</fieldset>
+				<div class="mb-3">
+					<div class="col col-md-12">
+						<label for="note" class="fw-bold">Ghi chú</label>
+						<textarea class="form-control" rows="5" name="note" id="note" th:text="${shiftMB.shiftEntity.note}"></textarea>
+						<div class="invalid-feedback text-left"></div>
+					</div>
+					
+				</div>
+				<div class="mb-3"> 
+		  			<div class="col col-md-6 text-center">
+						<th:block th:if="${shiftMB.form == false}">
+							<button type="button" id="btnAddShift_MB" class="btn btn-primary"><span></span>Giao ca</button>
+							<button type="reset" id="btnReset" class="btn btn-dark">Bỏ qua</button>
+						</th:block>
+					</div>
+				</div>
+		  	</form>
+			
+	  		</div>
+		</div>
+	</main>
+	
+	<!-- Modal -->
+
+        <div class="modal fade" id="showExportExcelModal" data-backdrop="static" data-keyboard="false"
+            tabindex="-1" aria-labelledby="showExportExcelModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="showExportExcelModalLabel">Xuất file Excel Giao - Nhận ca</h5>
+                        <button type="button" class="btn-close btn-close-model-slider-image" data-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+						<div class="row mb-3">
+							<div class="col col-md-6">
+								<label for="shiftMonth">Chọn mốc thời gian:</label>
+							</div>
+							<div class="col col-md-6">
+							  	<input type="month" id="shiftMonth" name="shiftMonth">
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col col-md-6">
+								<label for="filter">Lọc:</label>
+							</div>
+							<div class="col col-md-6">
+								<select id="filter" name="filter">
+									<option value="0">Tất cả</option>
+									<option value="1">Sự kiện</option>
+									<option value="2">Thời gian trực</option>
+								</select>
+							  	
+							</div>
+							
+						</div>
+						<div class="row mb-3">
+							<div class="col cl-md-12 text-center">
+								<button class="btn btn-primary" id="btnExportExcel">Xuất file Excel</button>
+							</div>
+						</div>
+                        
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!--end modal-->
+	
+	<button
+	        type="button"
+	        class="btn btn-danger btn-floating btn-lg"
+	        id="btn-back-to-top"
+	        >
+	        
+	  	<i class="bi bi-arrow-up"></i>
+	</button>
+	
+	<!--loading page-->
+	<div id="overlay">
+		<div class="cv-spinner">
+			<span class="spinner"></span>
+		</div>
+	</div>
+	<!--end loading page-->
+	
+  <!-- FOOTER -->
+  <footer class="container">
+    
+    <p>© 2022 Company, <a href="#">SCTV</a></p>
+  </footer>
+	
+	<script type="text/javascript">
+    	var contextPath = "[[@{/}]]";
+    	var pagePath = "[[${pagePath}]]";
+    	var current = document.getElementsByClassName(pagePath);
+        current[0].className += " active";
+    	
+    	var csrfHeader = "[[${_csrf.headerName}]]";
+    	var csrfToken = "[[${_csrf.token}]]";
+    </script> 
+    <script th:inline="javascript">
+	    /*<![CDATA[*/
+			var categorys = /*[[${listCategorys}]]*/ "Test";
+		/*	]]>*/
+		
+    </script>
+	 
+	<script th:src="@{/js/jquery-3.5.1.js}"></script> 
+	<script th:src="@{/js/bootstrap.min.js}"></script> 
+	<!-- <script th:src="@{/js/bootstrap.bundle.min.js}"></script>  -->
+    <script th:src="@{/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/js/dataTables.bootstrap5.min.js}"></script>
+    <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/shift.js}"></script>
+    <script th:src="@{/js/paging.js}"></script>
+</body>
+</html>

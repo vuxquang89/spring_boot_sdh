@@ -2,33 +2,6 @@
  * 
  */
 $(document).ready(function(){
-	$('#selectAction').change(function() {
-		
-	    var selected = $(this).val();
-	    if(selected == 1){
-	      $('#noteAction').show(500);
-		  $('#noteAction').next().show();
-	    }
-	    else{
-		  $('#noteAction').hide(500);	
-		  $('#noteAction').val("");		
-		  $('#noteAction').next().hide();	
-	    }
-	});
-	
-	$('#selectAction_MB').change(function() {
-		
-	    var selected = $(this).val();
-	    if(selected == 1){
-	      $('#noteAction_MB').show(500);
-		  $('#noteAction_MB').next().show();
-	    }
-	    else{
-		  $('#noteAction_MB').hide(500);	
-		  $('#noteAction_MB').val("");		
-		  $('#noteAction_MB').next().hide();	
-	    }
-	});
 	
 	$('#noteAction').on('change keyup paste',function(){
 		if($(this).val().trim().length >= 20){
@@ -74,17 +47,37 @@ $(document).ready(function(){
 		var chklab = $(this).attr('id');
 		if ($(this).is(':checked')) {
 	      	$("#lbl_" + chklab).removeClass("text-red");
+			$("#action_" + chklab).show(500);
 	    } else{
 			$("#lbl_" + chklab).addClass("text-red");
+			$("#action_" + chklab).hide(500);
+			setDefaultBoxAction("#action_" + chklab,0);
 		}
 	});
+	
+	$('.box_action').change(function(){
+		var radioName = $(this).attr('data-action');
+		selected_value = $("input[name='"+radioName+"']:checked").val();
+		if(selected_value == '1'){
+			$('#txt_'+radioName).show(500);	
+		  	$('#txt_'+radioName).next().show();
+		}else{
+			$('#txt_'+radioName).hide(500);	
+		  	$('#txt_'+radioName).next().hide();
+		}
+		//alert(selected_value);
+	});
+	
 	
 	$('.list-check-MB').on('change', function() {
 		var chklab = $(this).attr('id');
 		if ($(this).is(':checked')) {
 	      	$("#lbl_" + chklab).removeClass("text-red");
+			$("#action_" + chklab).show(500);
 	    } else{
 			$("#lbl_" + chklab).addClass("text-red");
+			$("#action_" + chklab).hide(500);
+			setDefaultBoxAction("#action_" + chklab,0);
 		}
 	});
 	
@@ -96,6 +89,14 @@ $(document).ready(function(){
 	
 	$('#btnExportExcel').on('click', exportExcel);
 })
+
+function setDefaultBoxAction(id, value){
+	var radioName = $(id).attr('data-action');
+	console.log(radioName);
+	$("input[name="+radioName+"][value=" + value + "]").prop('checked', true);
+	$('#txt_'+radioName).hide(500);	
+	$('#txt_'+radioName).next().hide();
+}
 
 function setDefaultMonth(){
 	//const monthControl = document.querySelector('input[type="month"]');
@@ -175,26 +176,29 @@ function addShift_MB(){
 function formValidate(){
 	var check = true;
 	
-	if($('#selectAction').val() == 1){
-		if($('#noteAction').val().trim().length < 20){
-			errorAction($('#noteAction'), "Cần nhập nội dung lớn hơn 20 ký tự", false);
-			check = false;
-		}else{
-			errorAction($('#noteAction'), "", true);
-		}
-	}
-	
 	$('input:checkbox[name=checkAction]').each(function() 
 	{    
 		var id = $(this).attr('id');
+		//var value = $(this).val();
 	    if($(this).is(':checked')){
 			//alert($(this).attr('id'));
 			$('#lbl_'+id).removeClass("text-red");
 			//var chklab = $(this).attr('id');
 			//console.log("val", $(this).val());
+			radioValue = $("input[name='"+id+"Radio']:checked").val();
+			if(radioValue == '1'){
+				if($('#txt_'+id+'Radio').val().trim().length < 10){
+					errorAction($('#txt_'+id+'Radio'), "Cần nhập nội dung lớn hơn 10 ký tự", false);
+					check = false;
+				}else{
+					errorAction($('#txt_'+id+'Radio'), "", true);
+				}
+			}else{
+				errorAction($('#txt_'+id+'Radio'), "", true);
+			}
 		}else{
 			//alert("uncheck " + $(this).attr('id'));
-			
+			errorAction($('#txt_'+id+'Radio'), "", true);
 			$('#lbl_'+id).addClass("text-red");
 			check = false;
 		}
@@ -208,14 +212,6 @@ function formValidate(){
 function formValidate_MB(){
 	var check = true;
 	
-	if($('#selectAction_MB').val() == 1){
-		if($('#noteAction_MB').val().trim().length < 20){
-			errorAction($('#noteAction_MB'), "Cần nhập nội dung lớn hơn 20 ký tự", false);
-			check = false;
-		}else{
-			errorAction($('#noteAction_MB'), "", true);
-		}
-	}
 	
 	$('input:checkbox[name=MB_checkAction]').each(function() 
 	{    
@@ -226,9 +222,20 @@ function formValidate_MB(){
 			$('#lbl_'+id).removeClass("text-red");
 			//var chklab = $(this).attr('id');
 			//console.log("val", $(this).val());
+			radioValue = $("input[name='"+id+"Radio']:checked").val();
+			if(radioValue == '1'){
+				if($('#txt_'+id+'Radio').val().trim().length < 10){
+					errorAction($('#txt_'+id+'Radio'), "Cần nhập nội dung lớn hơn 10 ký tự", false);
+					check = false;
+				}else{
+					errorAction($('#txt_'+id+'Radio'), "", true);
+				}
+			}else{
+				errorAction($('#txt_'+id+'Radio'), "", true);
+			}
 		}else{
 			//alert("uncheck " + $(this).attr('id'));
-			
+			errorAction($('#txt_'+id+'Radio'), "", true);
 			$('#lbl_'+id).addClass("text-red");
 			check = false;
 		}
@@ -237,4 +244,6 @@ function formValidate_MB(){
 	
 	
 	return check;
-}
+}/**
+ * 
+ */

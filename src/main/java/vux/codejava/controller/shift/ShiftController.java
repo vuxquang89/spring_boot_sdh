@@ -1,10 +1,12 @@
 package vux.codejava.controller.shift;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.Principal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,14 +26,22 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import vux.codejava.config.oauth.CustomOAuth2User;
 import vux.codejava.entity.CustomUserDetails;
+import vux.codejava.entity.User;
+import vux.codejava.entity.shift.DetailValue;
 import vux.codejava.entity.shift.KeyEntity;
+import vux.codejava.entity.shift.ShiftDetailEntity;
 import vux.codejava.entity.shift.ShiftEntity;
 import vux.codejava.entity.shift.ShiftRequest;
 import vux.codejava.helper.ShiftExcelHelper;
 import vux.codejava.response.ShiftResponse;
+import vux.codejava.service.GoogleApiService;
 import vux.codejava.service.KeyServices;
+import vux.codejava.service.ShiftDetailServices;
 import vux.codejava.service.ShiftServices;
+import vux.codejava.service.UserServices;
+import vux.codejava.util.PrincipalObject;
 
 @Controller
 public class ShiftController {
@@ -40,16 +50,51 @@ public class ShiftController {
 	private KeyServices keyServices;
 	
 	@Autowired
+	private PrincipalObject principalObject;
+	
+	@Autowired
 	private ShiftServices shiftServices;
+	
+	@Autowired
+	private ShiftDetailServices shiftDetailServices;
+	
+	@Autowired
+	private GoogleApiService googleApiService;
 	
 	@GetMapping("/shift")
 	public String viewOprate(Model model
 			,Principal principal
 			) {	
-		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+		
+		
+//		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+		CustomUserDetails userDetails = principalObject.getCustomUserDetails(principal);
+		String district = userDetails.getDistrict();
+		String fullname = userDetails.getFullName();
+		boolean inShift = false;
+		
 		model.addAttribute("pageTitle", "Giao - Nhận ca");
 		model.addAttribute("pagePath", "shift");
-		String district = userDetails.getDistrict();
+		
+		try {
+			List<String> nameShifts = googleApiService.readDataFromGoogleSheet(district);
+			
+			for(String name : nameShifts) {
+				if(name.toUpperCase().indexOf(fullname.toUpperCase()) >= 0) {
+					
+					inShift = true;
+					break;
+				}
+			}
+		} catch (GeneralSecurityException | IOException e) {
+			// TODO Auto-generated catch block
+			
+			System.out.println("error");
+			e.printStackTrace();
+			model.addAttribute("error","error : " + e);
+		}
+		
+		
 		List<KeyEntity> keyEntities = keyServices.findAll();
 		KeyEntity keyMT = getEntity(keyEntities, "MT");
 		KeyEntity keyMB = getEntity(keyEntities, "MB");
@@ -60,6 +105,7 @@ public class ShiftController {
 		shiftResponseMT.setUsername(keyMT.getUsername());
 		shiftResponseMT.setShiftEntity(shiftServices.findByKeyCode(keyMT.getKeyCode()));
 		shiftResponseMT.setAction();
+		shiftResponseMT.setInShift(inShift);
 		
 		ShiftResponse shiftResponseMB = new ShiftResponse();
 		shiftResponseMB.setStatus(keyMB.getKeyStatus());
@@ -67,6 +113,7 @@ public class ShiftController {
 		shiftResponseMB.setUsername(keyMB.getUsername());
 		shiftResponseMB.setShiftEntity(shiftServices.findByKeyCode(keyMB.getKeyCode()));
 		shiftResponseMB.setAction();
+		shiftResponseMB.setInShift(inShift);
 		
 		if(district.equalsIgnoreCase("MT")) {
 			if(keyMT.getKeyStatus() && keyMT.getUsername().equalsIgnoreCase(userDetails.getUsername())) {
@@ -138,7 +185,8 @@ public class ShiftController {
 			@ModelAttribute ShiftRequest request,
 			Principal principal
 			) {
-		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+//		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+		CustomUserDetails userDetails = principalObject.getCustomUserDetails(principal);
 		String shiftDistrict = request.getDistrict();
 		KeyEntity keyEntity = keyServices.findByDistrict(shiftDistrict);
 		if(keyEntity != null) {
@@ -148,6 +196,11 @@ public class ShiftController {
 			}else {
 				String keyCodeNow = keyEntity.getKeyCode();
 				ShiftEntity shiftEntity = shiftServices.findByKeyCode(keyCodeNow);
+				//update khi nguoi khac nhan ca
+				shiftEntity.setNoteReceive(request.getNoteReceive());
+				shiftEntity.setUserChangeNoteReceive(userDetails.getUsername());
+				shiftServices.save(shiftEntity);
+				
 				ShiftEntity shiftEntityNew = convertNewShiftEntity(shiftEntity);
 				
 				String keyCode = RandomStringUtils.randomAlphanumeric(20);
@@ -160,7 +213,12 @@ public class ShiftController {
 				shiftEntityNew.setUserReceive(userDetails.getUsername());
 				shiftEntityNew.setUserShift(userDetails.getUsername());
 				shiftEntityNew.setDateReceive(LocalDateTime.now());
-				shiftServices.save(shiftEntityNew);
+				shiftEntityNew.setDateShift(LocalDateTime.now());
+				shiftEntityNew.setDistrict(shiftDistrict);
+				//shiftEntityNew.setShiftDetails(convertShiftDetail(shiftEntityNew, shiftEntity.getShiftDetails()));
+				shiftEntityNew = shiftServices.save(shiftEntityNew);
+				
+				shiftDetailServices.saveAll(convertShiftDetail(shiftEntityNew, shiftEntity.getShiftDetails()));
 			}
 			
 			//return viewOprate(model, principal);
@@ -184,18 +242,19 @@ public class ShiftController {
 			,@ModelAttribute ShiftRequest request
 			,Principal principal
 			) {
-		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
-		
+//		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+		CustomUserDetails userDetails = principalObject.getCustomUserDetails(principal);
 		KeyEntity keyEntity = keyServices.findByUsernameAndDistrict(userDetails.getUsername(), request.getDistrict()).get();
 		
 		if(keyEntity != null) {
 			ShiftEntity shiftEntity = shiftServices.findByKeyCode(keyEntity.getKeyCode());
 			shiftEntity.setAction(request.getAction());
 			shiftEntity.setNote(request.getNote());
-			shiftEntity.setNoteAction(request.getNoteAction());
+			//shiftEntity.setNoteAction(request.getNoteAction());
 			shiftEntity.setUserShift(userDetails.getUsername());
 			shiftEntity.setDateShift(LocalDateTime.now());
-			shiftEntity.setDistrict(request.getDistrict());
+			shiftEntity.setShiftDetails(convertActiontoList(shiftEntity.getShiftDetails(), request));
+			//shiftEntity.setDistrict(request.getDistrict());
 			keyEntity.setKeyStatus(false);
 			keyEntity.setUsername("null");
 			keyServices.save(keyEntity);
@@ -208,13 +267,22 @@ public class ShiftController {
 		return "redirect:/shift";
 	}
 	
+	/**
+	 * export file excel
+	 * @param response
+	 * @param month
+	 * @param filter
+	 * @return
+	 * @throws IOException
+	 */
 	@GetMapping("/shift/export/excel/{month}/{filter}")
     public ResponseEntity<?> exportToExcel(HttpServletResponse response,
     		@PathVariable("month") String month,
     		@PathVariable("filter") int filter) throws IOException {
 		
 		//List<ShiftEntity> listShifts = shiftServices.listAll();
-		List<ShiftEntity> listShifts = shiftServices.listByDateReceive(month);
+		List<ShiftEntity> listShifts = shiftServices.listByDateReceive(month);//sheet giao-nhan ca
+		List<ShiftEntity> listShiftActions = shiftServices.listByDateShift(month);//sheet su kien
 		
 		response.setContentType("application/octet-stream");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -222,7 +290,7 @@ public class ShiftController {
          
         
         
-        ShiftExcelHelper excelExport = new ShiftExcelHelper(listShifts);
+        ShiftExcelHelper excelExport = new ShiftExcelHelper(listShifts,listShiftActions);
         //excelExport.export(response, filter, month);
         
         InputStreamResource file = new InputStreamResource(excelExport.export(filter, month));
@@ -265,10 +333,39 @@ public class ShiftController {
 		ShiftEntity shiftNew = new ShiftEntity();
 		if(shiftEntity != null) {
 			shiftNew.setNote(shiftEntity.getNote());
-			shiftNew.setNoteAction(shiftEntity.getNoteAction());
+			//shiftNew.setNoteAction(shiftEntity.getNoteAction());
 			shiftNew.setAction(shiftEntity.getAction());
+			//shiftNew.setShiftDetails(shiftEntity.getShiftDetails());
 		}
 		
 		return shiftNew;
+	}
+	
+	private List<ShiftDetailEntity> convertShiftDetail(ShiftEntity shiftEntity, List<ShiftDetailEntity> shiftDetailsOld){
+		List<ShiftDetailEntity> shiftDetails = new ArrayList<ShiftDetailEntity>();
+		for(ShiftDetailEntity shiftDetail : shiftDetailsOld) {
+			ShiftDetailEntity shift = new ShiftDetailEntity();
+			shift.setAction(shiftDetail.getAction());
+			shift.setCables(shiftDetail.getCables());
+			shift.setNoteAction(shiftDetail.getNoteAction());
+			shift.setShift(shiftEntity);
+			shiftDetails.add(shift);
+		}
+		return shiftDetails;
+	}
+	
+	private List<ShiftDetailEntity> convertActiontoList(List<ShiftDetailEntity> shiftDetails, ShiftRequest request){
+		//List<ShiftDetailEntity> shiftDetails = new ArrayList<ShiftDetailEntity>();
+		for(ShiftDetailEntity shiftDetail : shiftDetails) {
+			DetailValue detailValue = request.getValues(shiftDetail.getCables().getCableCode());
+			shiftDetail.setAction(detailValue.getAction());
+			if(detailValue.getAction() == 0) {
+				shiftDetail.setNoteAction("");
+			}else {
+				shiftDetail.setNoteAction(detailValue.getNoteAction());
+			}
+			
+		}
+		return shiftDetails;
 	}
 }

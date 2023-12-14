@@ -23,15 +23,16 @@ public class ShiftExcelExportUtil {
 
 	private XSSFWorkbook workbook;
     private XSSFSheet sheet;
-    private List<ShiftEntity> listShifts;
+    private List<ShiftEntity> listShiftActions, listShifts;
     
     static String[] HEADER_SHIFT = { "Username", "Thời gian nhận ca", "Thời gian giao ca", "Tổng giờ" };
-    static String[] HEADER_ACTION = {"Username", "Thời gian", "Khu vực", "Có/Không sự kiện", "Ghi chú sự kiện", "Ghi chú"};
+    static String[] HEADER_ACTION = {"Username", "Thời gian", "Khu vực", "Ghi chú sự kiện", "Ghi chú", ""};
     static DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     
     
-    public ShiftExcelExportUtil(List<ShiftEntity> listShifts) {
+    public ShiftExcelExportUtil(List<ShiftEntity> listShifts, List<ShiftEntity> listShiftActions) {
     	this.listShifts = listShifts;
+    	this.listShiftActions = listShiftActions;
     	workbook = new XSSFWorkbook();
     }
     
@@ -110,7 +111,7 @@ public class ShiftExcelExportUtil {
         font.setFontHeight(14);
         style.setFont(font);
                  
-        for (ShiftEntity shift : listShifts) {
+        for (ShiftEntity shift : listShiftActions) {
             Row row = sheet.createRow(rowCount++);
             int columnCount = 0;
              
@@ -119,9 +120,10 @@ public class ShiftExcelExportUtil {
             LocalDate localDate = shift.getDateShift().toLocalDate();
             createCell(row, columnCount++, localDate.toString(), style);
             //createCell(row, columnCount++, shift.getDistrict(), style);
-            createCell(row, columnCount++, shift.getAction() == 0 ? "Không sự kiện" : "Có sự kiện", style);
-            createCell(row, columnCount++, shift.getNoteAction(), style);
+            //createCell(row, columnCount++, shift.getAction() == 0 ? "Không sự kiện" : "Có sự kiện", style);
+            createCell(row, columnCount++, shift.toString(), style);
             createCell(row, columnCount++, shift.getNote(), style);
+            createCell(row, columnCount++, shift.getNoteReceive(), style);
         }
     }
      

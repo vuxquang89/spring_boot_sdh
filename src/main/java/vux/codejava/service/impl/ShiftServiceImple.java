@@ -36,6 +36,12 @@ public class ShiftServiceImple implements ShiftServices{
 		String[] months = Convert.convertStringToMonthYear(month);
 		return shiftRepository.findByDateReceive(months[1], months[0]);
 	}
+
+	@Override
+	public List<ShiftEntity> listByDateShift(String month) {
+		String[] months = Convert.convertStringToMonthYear(month);
+		return shiftRepository.findByDateShift(months[1], months[0]);
+	}
 	
 	
 

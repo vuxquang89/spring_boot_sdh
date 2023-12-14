@@ -37,6 +37,7 @@ import vux.codejava.service.operate.ServiceBackboneServices;
 import vux.codejava.service.operate.ServiceCustomerServices;
 import vux.codejava.service.operate.ServiceInternalServices;
 import vux.codejava.service.operate.StatusServices;
+import vux.codejava.util.PrincipalObject;
 
 @Controller
 public class OperatinalStatisticController {
@@ -58,6 +59,8 @@ public class OperatinalStatisticController {
 	private EventServices eventServices;
 	@Autowired
 	private StatusServices statusServices;
+	@Autowired
+	private PrincipalObject principalObject;
 	
 	@Autowired
 	private OperationalStatisticServices services;
@@ -73,7 +76,8 @@ public class OperatinalStatisticController {
 	@GetMapping("/operate/add")
 	public String viewFormOperate(Model model,
 			Principal principal) {
-		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+//		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+		CustomUserDetails userDetails = principalObject.getCustomUserDetails(principal);
 		List<CableType> listCableTypes = cableTypeServices.findAll();
 		List<CableLink> listCableLinks = cableLinkServices.findByDistrict(listCableTypes.get(0).getId(), userDetails.getDistrict());
 		
@@ -136,7 +140,8 @@ public class OperatinalStatisticController {
 			@PathParam("operateId") Long operateId, 
 			@PathParam("operateDate") String operateDate,
 			Principal principal) {
-		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+//		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+		CustomUserDetails userDetails = principalObject.getCustomUserDetails(principal);
 		services.delete(userDetails.getUsername(), LocalDateTime.now(),  operateId);
 		System.out.println("DO DELETE Operate Id : " + operateId);
 		return "redirect:/operate/list/"+operateDate;
@@ -145,7 +150,8 @@ public class OperatinalStatisticController {
 	@PostMapping("/operate/update/{id}")
 	public String updateOperate(Model model, @PathVariable("id") Long id, 
 			@ModelAttribute OperationalStatistics operational, Principal principal) {
-		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+//		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+		CustomUserDetails userDetails = principalObject.getCustomUserDetails(principal);
 		List<String> msgError = new ArrayList<String>();
 		boolean check = true;
 		System.out.println("update operate...");
@@ -185,8 +191,11 @@ public class OperatinalStatisticController {
 	}
 	
 	@PostMapping("/operate/do_add")
-	public String addOperate(Model model, OperationalStatistics operationalStatistics, Principal principal) {
-		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+	public String addOperate(Model model, 
+			OperationalStatistics operationalStatistics, 
+			Principal principal) {
+//		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
+		CustomUserDetails userDetails = principalObject.getCustomUserDetails(principal);
 		List<String> msgError = new ArrayList<String>();
 		boolean check = true;
 		if(operationalStatistics.getLocalStartTime() == null || operationalStatistics.getLocalEndTime() == null) {

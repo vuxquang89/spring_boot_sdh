@@ -16,11 +16,12 @@
 			<div class="col-md-6 p-3">
 	  			<button class="btn btn-info btn-sm text-white" data-toggle="modal" data-target="#showExportExcelModal">Xuất Excel</button>	
 	  		</div>
+	  		<th:block th:text="${error}"/>
 		</div>
 	  	<div class="row">
 			<div class="col-md-6">
 				<div class="d-flex align-items-center p-3 my-3 text-white bg-header rounded shadow-sm col-md-12">
-				  	<div class="lh-1">
+				  	<div class="lh-1 relative">
 						<form method="post" th:action="@{/shift/action}">
 						  <input type="hidden" name="district" value="MT"/>
 				
@@ -29,20 +30,32 @@
 							Giao ca <th:block th:text="'( ' + ${shiftMT.username} + ' )'"/>
 					      </th:block>
 						  <th:block th:unless="${shiftMT.status}">
-							<th:block th:if="${shiftMT.district == district || district == 'SG'}">
-								<th:block th:if="${district == 'SG'}">
-									<th:block th:if="${statusSG}">
-										Nhận ca
+							<th:block th:if="${shiftMT.district == district || district == 'MN'}">
+								<th:block th:if="${shiftMT.inShift}">
+									<th:block th:if="${district == 'MN'}">
+										<th:block th:if="${statusSG}">
+											Nhận ca
+										</th:block>
+										<th:block th:unless="${statusSG}">
+											<button class="btn btn-primary btn-sm">Nhận ca</button>
+										</th:block>
 									</th:block>
-									<th:block th:unless="${statusSG}">
-										<button class="btn btn-primary btn-sm">Nhận ca</button>
+									<th:block th:unless="${district == 'MN'}">
+											<button class="btn btn-primary btn-sm">Nhận ca</button>
 									</th:block>
+									
+									<div class="bubble">
+										<p class="title">Ghi chú khi nhận ca</p>
+										<textarea name="noteReceive" class="form-control" rows="3"></textarea>
+									</div>
 								</th:block>
-								<th:block th:unless="${district == 'SG'}">
-										<button class="btn btn-primary btn-sm">Nhận ca</button>
+								<th:block th:unless="${shiftMT.inShift}">
+									Bạn không có ca trực hôm nay
 								</th:block>
+								
+								
 							</th:block>
-							<th:block th:unless="${shiftMT.district == district || district == 'SG'}">
+							<th:block th:unless="${shiftMT.district == district || district == 'MN'}">
 								Nhận ca
 							</th:block>
 					      </th:block>
@@ -56,47 +69,110 @@
 			  	
 		  		<!-- form MT-->
 		  		<input type="hidden" name="district" value="MT"/>
-		  		<div class="mb-3 row">
-					<div class="col col-md-6">
-						<label for="selectAction" class="fw-bold">Chọn sự kiện</label>
-			  			<select id="selectAction" th:field="*{shiftMT.action}" name="action" class="form-select form-select-sm">
-							<option value="0">Không sự cố</option>
-							<option value="1">Có sự kiện</option>
-						</select>
-						
-						<textarea class="form-control mt-1" th:style="${shiftMT.action == 0} ? 'display: none;' : ''" 
-							rows="5" name="noteAction" id="noteAction" th:text="${shiftMT.shiftEntity.noteAction}"></textarea>
-						<div class="invalid-feedback text-left"></div>
-					</div>			
-					
-				</div>
-				<fieldset class="scheduler-border col col-md-6">
+		  		
+				<fieldset class="scheduler-border col col-md-8">
 					<legend class="scheduler-border">Kiểm tra</legend>
 					<div class="mb-3 row">
-						<div class="form-check">
-						  <input class="form-check-input list-check" type="checkbox" value="checkMetro" name="checkAction" id="check1">
-						  <label class="form-check-label" id="lbl_check1" for="check1">
+						<div class="form-check" th:each="shiftDetail : ${shiftMT.shiftEntity.shiftDetails}">
+						  <input class="form-check-input list-check" type="checkbox" th:value="${shiftDetail.cables.cableCode}" 
+						  	name="checkAction" th:id="${shiftDetail.cables.cableCode}" th:checked="${shiftDetail.action  == 1 ? true : false}">
+						  <label class="form-check-label" th:id="'lbl_'+${shiftDetail.cables.cableCode}" th:for="${shiftDetail.cables.cableCode}" th:text="${shiftDetail.cables.cableName}">
 						    Metro MĐ
 						  </label>
-						  
+						  <div th:id="'action_' + ${shiftDetail.cables.cableCode}" class="box_action" th:data-action="${shiftDetail.cables.cableCode} + 'Radio'" th:style="${shiftDetail.action  == 0} ? 'display: none;' : ''">
+							  <div class="form-check">
+								  <input class="form-check-input" type="radio" th:name="${shiftDetail.cables.cableCode}+'Radio'" 
+								  	value="0" th:checked="${shiftDetail.action  == 0 ? true : false}" th:id="'flexRadio0'+${shiftDetail.cables.cableCode}">
+								  <label class="form-check-label" th:for="'flexRadio0'+${shiftDetail.cables.cableCode}">
+								    Không sự cố
+								  </label>
+							  </div>
+							  <div class="form-check">
+							  	  <input class="form-check-input" type="radio" th:name="${shiftDetail.cables.cableCode}+'Radio'" 
+							  	  	value="1" th:checked="${shiftDetail.action  == 1 ? true : false}" th:id="'flexRadio1'+${shiftDetail.cables.cableCode}">
+							      <label class="form-check-label" th:for="'flexRadio1'+${shiftDetail.cables.cableCode}">
+							        Có sự kiện
+							      </label>
+							      
+							      <textarea class="form-control mt-1" th:id="'txt_'+${shiftDetail.cables.cableCode}+'Radio'" th:name="'noteAction'+${shiftDetail.cables.cableCode}" 
+							      	rows="3" th:style="${shiftDetail.action  == 0} ? 'display: none;' : ''" th:text="${shiftDetail.noteAction}"></textarea>
+								  <div class="invalid-feedback text-left"></div>
+							  </div>
+						  </div>
 						</div>
+						<!-- 
 						<div class="form-check">
 						  <input class="form-check-input list-check" type="checkbox" value="checkHW" name="checkAction" id="check2">
 						  <label class="form-check-label" id="lbl_check2" for="check2">
 						    Truyền dẫn HW HCM - DNG
 						  </label>
+						  
+						  <div id="action_check2" class="box_action" data-action="radio_check2" style="display: none;">
+							  <div class="form-check">
+								  <input class="form-check-input" type="radio" name="radio_check2" value="0" id="flexRadioDefault3" checked>
+								  <label class="form-check-label" for="flexRadioDefault1">
+								    Không sự cố
+								  </label>
+							  </div>
+							  <div class="form-check">
+							  	  <input class="form-check-input" type="radio" name="radio_check2" value="1" id="flexRadioDefault4">
+							      <label class="form-check-label" for="flexRadioDefault2">
+							        Có sự kiện
+							      </label>
+							      
+							      <textarea class="form-control mt-1" id="txt_radio_check2" style="display: none;"></textarea>
+								  <div class="invalid-feedback text-left"></div>
+							  </div>
+						  </div>
+						  
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input list-check" type="checkbox" value="checkM1" name="checkAction" id="check3">
 						  <label class="form-check-label" id="lbl_check3" for="check3">
 						    Tuyến cáp M1 HCM - DNG
 						  </label>
+						  
+						  <div id="action_check3" class="box_action" data-action="radio_check3" style="display: none;">
+							  <div class="form-check">
+								  <input class="form-check-input" type="radio" name="radio_check3" value="0" id="flexRadioDefault5" checked>
+								  <label class="form-check-label" for="flexRadioDefault1">
+								    Không sự cố
+								  </label>
+							  </div>
+							  <div class="form-check">
+							  	  <input class="form-check-input" type="radio" name="radio_check3" value="1" id="flexRadioDefault6">
+							      <label class="form-check-label" for="flexRadioDefault2">
+							        Có sự kiện
+							      </label>
+							      
+							      <textarea class="form-control mt-1" id="txt_radio_check3" style="display: none;"></textarea>
+								  <div class="invalid-feedback text-left"></div>
+							  </div>
+						  </div>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input list-check" type="checkbox" value="checkM2" name="checkAction" id="check4">
 						  <label class="form-check-label" id="lbl_check4" for="check4">
 						    Tuyến cáp M2 HCM - DNG
 						  </label>
+						  
+						  <div id="action_check4" class="box_action" data-action="radio_check4" style="display: none;">
+							  <div class="form-check">
+								  <input class="form-check-input" type="radio" name="radio_check4" value="0" id="flexRadioDefault7" checked>
+								  <label class="form-check-label" for="flexRadioDefault1">
+								    Không sự cố
+								  </label>
+							  </div>
+							  <div class="form-check">
+							  	  <input class="form-check-input" type="radio" name="radio_check4" value="1" id="flexRadioDefault8">
+							      <label class="form-check-label" for="flexRadioDefault2">
+							        Có sự kiện
+							      </label>
+							      
+							      <textarea class="form-control mt-1" id="txt_radio_check4" style="display: none;"></textarea>
+								  <div class="invalid-feedback text-left"></div>
+							  </div>
+						  </div>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input list-check" type="checkbox" value="checkDS" name="checkAction" id="check5">
@@ -128,6 +204,7 @@
 						    Chăm sóc khách hàng
 						  </label>
 						</div>
+						 -->
 					</div>
 				</fieldset>
 				<div class="mb-3">
@@ -152,7 +229,7 @@
 			<!-- form MB -->
 	  		<div class="col-md-6 ">
 				<div class="d-flex align-items-center p-3 my-3 text-white bg-header rounded shadow-sm col-md-12">
-				  	<div class="lh-1">
+				  	<div class="lh-1 relative">
 						<form method="post" th:action="@{/shift/action}">
 						  <input type="hidden" name="district" value="MB"/>
 					      <h2 class="h5 mb-0 text-red lh-2">MB - 
@@ -160,21 +237,34 @@
 							Giao ca <th:block th:text="'( ' + ${shiftMB.username} + ' )'"/>
 					      </th:block>
 						  <th:block th:unless="${shiftMB.status}">
-							<th:block th:if="${shiftMB.district == district || district == 'SG'}">
-								<th:block th:if="${district == 'SG'}">
-									<th:block th:if="${statusSG}">
-										Nhận ca
+							<th:block th:if="${shiftMB.district == district || district == 'MN'}">
+								
+								<th:block th:if="${shiftMB.inShift}">
+									<th:block th:if="${district == 'MN'}">
+										<th:block th:if="${statusSG}">
+											Nhận ca
+										</th:block>
+										<th:block th:unless="${statusSG}">
+											<button class="btn btn-primary btn-sm">Nhận ca</button>
+										</th:block>
 									</th:block>
-									<th:block th:unless="${statusSG}">
-										<button class="btn btn-primary btn-sm">Nhận ca</button>
+									<th:block th:unless="${district == 'MN'}">
+											<button class="btn btn-primary btn-sm">Nhận ca</button>
 									</th:block>
+									<div class="bubble">
+										<p class="title">Ghi chú khi nhận ca</p>
+										<textarea name="noteReceive" class="form-control" rows="3"></textarea>
+									</div>
 								</th:block>
-								<th:block th:unless="${district == 'SG'}">
-										<button class="btn btn-primary btn-sm">Nhận ca</button>
+								<th:block th:unless="${shiftMB.inShift}">
+									Bạn không có ca trực hôm nay
 								</th:block>
+							
+							
+								
 								
 							</th:block>
-							<th:block th:unless="${shiftMB.district == district || district == 'SG'}">
+							<th:block th:unless="${shiftMB.district == district || district == 'MN'}">
 								Nhận ca
 							</th:block>
 					      </th:block>
@@ -187,30 +277,38 @@
 			  	
 		  		<input type="hidden" name="district" value="MB"/>
 		  	
-		  		<div class="mb-3 row">
-					<div class="col col-md-6">
-						<label for="selectAction_MB" class="fw-bold">Chọn sự kiện</label>
-			  			<select id="selectAction_MB" th:field="*{shiftMB.action}" name="action" class="form-select form-select-sm">
-							<option value="0">Không sự cố</option>
-							<option value="1">Có sự kiện</option>
-						</select>
-						
-						<textarea class="form-control mt-1" th:style="${shiftMB.action == 0} ? 'display: none;' : ''"
-							 rows="5" name="noteAction" id="noteAction_MB" th:text="${shiftMB.shiftEntity.noteAction}"></textarea>
-						<div class="invalid-feedback text-left"></div>
-					</div>			
-					
-				</div>
-				<fieldset class="scheduler-border col col-md-6">
+		  		
+				<fieldset class="scheduler-border col col-md-8">
 					<legend class="scheduler-border">Kiểm tra</legend>
 					<div class="mb-3 row">
-						<div class="form-check">
-						  <input class="form-check-input list-check-MB" type="checkbox" value="MB_checkMetro" name="MB_checkAction" id="MB_check1">
-						  <label class="form-check-label" id="lbl_MB_check1" for="MB_check1">
-						    Metro MT
+						<div class="form-check" th:each="shiftDetail : ${shiftMB.shiftEntity.shiftDetails}">
+						  <input class="form-check-input list-check-MB" type="checkbox" th:value="${shiftDetail.cables.cableCode}" 
+						  	name="MB_checkAction" th:id="${shiftDetail.cables.cableCode}" th:checked="${shiftDetail.action  == 1 ? true : false}">
+						  <label class="form-check-label" th:id="'lbl_'+${shiftDetail.cables.cableCode}" th:for="${shiftDetail.cables.cableCode}" th:text="${shiftDetail.cables.cableName}">
+						    Metro MĐ
 						  </label>
-						  
+						  <div th:id="'action_' + ${shiftDetail.cables.cableCode}" class="box_action" th:data-action="${shiftDetail.cables.cableCode} + 'Radio'" th:style="${shiftDetail.action  == 0} ? 'display: none;' : ''">
+							  <div class="form-check">
+								  <input class="form-check-input" type="radio" th:name="${shiftDetail.cables.cableCode}+'Radio'" 
+								  	value="0" th:checked="${shiftDetail.action  == 0 ? true : false}" th:id="'flexRadio0'+${shiftDetail.cables.cableCode}">
+								  <label class="form-check-label" th:for="'flexRadio0'+${shiftDetail.cables.cableCode}">
+								    Không sự cố
+								  </label>
+							  </div>
+							  <div class="form-check">
+							  	  <input class="form-check-input" type="radio" th:name="${shiftDetail.cables.cableCode}+'Radio'" 
+							  	  	value="1" th:checked="${shiftDetail.action  == 1 ? true : false}" th:id="'flexRadio1'+${shiftDetail.cables.cableCode}">
+							      <label class="form-check-label" th:for="'flexRadio1'+${shiftDetail.cables.cableCode}">
+							        Có sự kiện
+							      </label>
+							      
+							      <textarea class="form-control mt-1" th:id="'txt_'+${shiftDetail.cables.cableCode}+'Radio'" th:name="'noteAction'+${shiftDetail.cables.cableCode}" 
+							      	rows="3" th:style="${shiftDetail.action  == 0} ? 'display: none;' : ''" th:text="${shiftDetail.noteAction}"></textarea>
+								  <div class="invalid-feedback text-left"></div>
+							  </div>
+						  </div>
 						</div>
+						<!-- 
 						<div class="form-check">
 						  <input class="form-check-input list-check-MB" type="checkbox" value="MB_checkHW1" name="MB_checkAction" id="MB_check2">
 						  <label class="form-check-label" id="lbl_MB_check2" for="MB_check2">
@@ -265,6 +363,7 @@
 						    Chăm sóc khách hàng
 						  </label>
 						</div>
+						 -->
 					</div>
 				</fieldset>
 				<div class="mb-3">

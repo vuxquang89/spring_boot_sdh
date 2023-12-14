@@ -27,7 +27,7 @@
          -->
          
          <div class="ms-auto text-white" sec:authorize="isAuthenticated()">
-         	<span th:text = "'Chào ' + ${#request.userPrincipal.principal.username}"></span>
+         	<span th:text = "'Chào ' + ${#request.userPrincipal.principal.fullName}"></span>
          </div>
 
          <ul class="navbar-nav mb-2 mb-lg-0">

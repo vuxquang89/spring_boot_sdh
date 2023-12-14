@@ -118,6 +118,12 @@ public class LoginController {
 		return "403";
 	}
 	*/
+	@GetMapping("/login/authentication/401")
+	public String errorPage() {
+		return "error/401";
+	}
+	
+	
 	/* get role */
 	private String getRole(Collection<? extends GrantedAuthority> collection) {
 		String role = "";

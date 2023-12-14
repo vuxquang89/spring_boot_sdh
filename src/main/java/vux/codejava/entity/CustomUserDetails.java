@@ -87,4 +87,8 @@ public class CustomUserDetails implements UserDetails {
 	public String getDistrict() {
 		return user.getDistrict();
 	}
+	
+	public String getFullName() {
+		return user.getFullName();
+	}
 }

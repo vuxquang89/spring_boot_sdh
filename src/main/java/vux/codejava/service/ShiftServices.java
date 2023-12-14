@@ -10,4 +10,5 @@ public interface ShiftServices {
 	ShiftEntity save(ShiftEntity shiftEntity);
 	List<ShiftEntity> listAll();
 	List<ShiftEntity> listByDateReceive(String month);
+	List<ShiftEntity> listByDateShift(String month);
 }

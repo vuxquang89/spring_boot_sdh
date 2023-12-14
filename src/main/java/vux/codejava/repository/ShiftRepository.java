@@ -19,4 +19,9 @@ public interface ShiftRepository extends JpaRepository<ShiftEntity, Long>{
 	@Modifying
 	@Query(value = "SELECT * FROM receive_shift WHERE Month(date_receive)=?1 && YEAR(date_receive)=?2 ORDER BY user_receive ASC", nativeQuery = true)
 	List<ShiftEntity> findByDateReceive(String month, String year);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "SELECT * FROM receive_shift WHERE Month(date_shift)=?1 && YEAR(date_shift)=?2 ORDER BY date_shift ASC", nativeQuery = true)
+	List<ShiftEntity> findByDateShift(String month, String year);
 }

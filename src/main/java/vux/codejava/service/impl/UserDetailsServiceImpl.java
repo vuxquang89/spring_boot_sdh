@@ -39,5 +39,10 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		
 		return new CustomUserDetails(user);
 	}
+	
+	public CustomUserDetails findByEmail(String Email) {
+		User user = repo.findByEmail(Email).orElse(null);
+		return new CustomUserDetails(user);
+	}
 
 }

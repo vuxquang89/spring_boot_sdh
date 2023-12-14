@@ -9,6 +9,7 @@ public class ShiftResponse {
 	private Integer action;
 	private Boolean status;
 	private Boolean form;
+	private Boolean inShift;
 	private ShiftEntity shiftEntity;
 	
 	
@@ -25,6 +26,12 @@ public class ShiftResponse {
 		this.district = district;
 	}
 	
+	public Boolean getInShift() {
+		return inShift;
+	}
+	public void setInShift(Boolean inShift) {
+		this.inShift = inShift;
+	}
 	public Integer getAction() {
 		return action;
 	}

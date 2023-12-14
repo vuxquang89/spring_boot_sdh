@@ -23,14 +23,15 @@ public class ShiftExcelHelper {
 
 	private XSSFWorkbook workbook;
     private XSSFSheet sheet;
-    private List<ShiftEntity> listShifts;
+    private List<ShiftEntity> listShiftActions, listShifts;
     
     static String[] HEADER_SHIFT = { "Username", "Thời gian nhận ca", "Thời gian giao ca", "Tổng giờ" };
-    static String[] HEADER_ACTION = {"Username", "Thời gian", "Khu vực", "Có/Không sự kiện", "Ghi chú sự kiện", "Ghi chú"};
+    static String[] HEADER_ACTION = {"Username", "Thời gian", "Khu vực", "Ghi chú sự kiện", "Ghi chú",""};
     static DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     
-    public ShiftExcelHelper(List<ShiftEntity> listShifts) {
+    public ShiftExcelHelper(List<ShiftEntity> listShifts, List<ShiftEntity> listShiftActions) {
     	this.listShifts = listShifts;
+    	this.listShiftActions = listShiftActions;
     	workbook = new XSSFWorkbook();
     }
     
@@ -110,7 +111,7 @@ public class ShiftExcelHelper {
         font.setFontHeight(14);
         style.setFont(font);
                  
-        for (ShiftEntity shift : listShifts) {
+        for (ShiftEntity shift : listShiftActions) {
             Row row = sheet.createRow(rowCount++);
             int columnCount = 0;
              
@@ -119,9 +120,10 @@ public class ShiftExcelHelper {
             LocalDate localDate = shift.getDateShift().toLocalDate();
             createCell(row, columnCount++, localDate.toString(), style);
             createCell(row, columnCount++, shift.getDistrict(), style);
-            createCell(row, columnCount++, shift.getAction() == 0 ? "Không sự kiện" : "Có sự kiện", style);
-            createCell(row, columnCount++, shift.getNoteAction(), style);
+            //createCell(row, columnCount++, shift.getAction() == 0 ? "Không sự kiện" : "Có sự kiện", style);
+            createCell(row, columnCount++, shift.toString(), style);
             createCell(row, columnCount++, shift.getNote(), style);
+            createCell(row, columnCount++, shift.getNoteReceive(), style);
         }
     }
      
@@ -135,26 +137,14 @@ public class ShiftExcelHelper {
         String rowUser = "none";
         Row row = null;
         long sumHours = 0;
-        int size = listShifts.size() - 1;
-        int count = 0, countShift = 0;
+        int size = listShifts.size();
+        int count = 1, countShift = 0;
         
         for (ShiftEntity shift : listShifts) {
         	
             int columnCount = 0;
             
-        	if(rowUser.equals(shift.getUserReceive())) {
-        		long t = Convert.convertToMinutes(shift.getDateReceive(), shift.getDateShift());
-        		createCell(row, shift.getDateReceive().getDayOfMonth(), Convert.convertToHoursMinutes(t), style);
-        		sumHours += t;
-        		countShift++;
-        		
-        		if(size == count) {
-        			createCell(row, colSumHours, countShift+"", style);
-        			createCell(row, colSumHours+1, Convert.convertToHoursMinutes(sumHours), style);
-        			sumHours = 0;
-        			countShift = 0;
-        		}
-        	}else {
+        	if(!rowUser.equals(shift.getUserReceive())) {
         		if(!rowUser.equals("none")) {
         			createCell(row, colSumHours, countShift+"", style);
         			createCell(row, colSumHours+1, Convert.convertToHoursMinutes(sumHours), style);
@@ -163,13 +153,25 @@ public class ShiftExcelHelper {
         		}
         		row = sheet.createRow(rowCount);
         		createCell(row, columnCount, shift.getUserReceive(), style);
-        		long t = Convert.convertToMinutes(shift.getDateReceive(), shift.getDateShift());
-        		sumHours += t;
-        		countShift++;
-        		createCell(row, shift.getDateReceive().getDayOfMonth(), Convert.convertToHoursMinutes(t), style);
+        		
         		rowUser = shift.getUserReceive();
         		rowCount++;
+        		
+        		
         	}
+        	
+        	long t = Convert.convertToMinutes(shift.getDateReceive(), shift.getDateShift());
+    		createCell(row, shift.getDateReceive().getDayOfMonth(), Convert.convertToHoursMinutes(t), style);
+    		sumHours += t;
+    		countShift++;
+        	
+    		if(size == count) {
+    			createCell(row, colSumHours, countShift+"", style);
+    			createCell(row, colSumHours+1, Convert.convertToHoursMinutes(sumHours), style);
+    			sumHours = 0;
+    			countShift = 0;
+    		}
+    		
             count++;
             
         }

@@ -213,6 +213,40 @@ p.invalid-feedback{
 }
 /*----------end loading page------*/
 
+
+/*----------box bubble------------*/
+.bubble {
+	position: absolute;
+	background:#cbe8f0;
+	padding:10px;
+	width:270px;
+	left:140px;
+	bottom:-10px;
+	border-radius:2px;
+
+}
+
+.bubble:after{
+  content:'';
+  position:absolute;
+  border:10px solid transparent;
+  /*
+  border-bottom:10px solid #cbe8f0;
+  bottom:0px;
+  left:-10px;
+  */
+  border-right:10px solid #cbe8f0;
+  bottom:10px;
+  left:-20px;
+}
+
+/*----------end box bubble-----------*/
+
+.title{
+	font-size: 16px;
+    margin: 0;
+}
+
 /* hide scrollbar but allow scrolling */
 #showImageSliderModal {
   -ms-overflow-style: none; /* for Internet Explorer, Edge */

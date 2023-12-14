@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import vux.codejava.config.oauth.CustomOAuth2User;
+import vux.codejava.config.oauth.CustomOAuth2UserService;
+import vux.codejava.config.oauth.OAuth2LoginSuccessHandler;
 import vux.codejava.service.impl.UserDetailsServiceImpl;
 
 @Configuration
@@ -47,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		});
 		
 		//cac trang khong yeu cau dang nhap
-		http.authorizeHttpRequests().antMatchers("/", "/login", "/logout", "/register").permitAll();
+		http.authorizeHttpRequests().antMatchers("/", "/login", "/logout", "/register", "/oauth/**").permitAll();
 		
 		//trang userInfo yeu cau pahi login voi vai tro ROLE_USER hoac ROLE_ADMIN
 		//neu chua login, se chuyen redirect toi trang login
@@ -68,7 +71,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.rememberMe().key("sdh@sctv").tokenValiditySeconds(259200);
 		
 		//cau hinh login
-		http.authorizeHttpRequests().and().formLogin()
+		http.authorizeHttpRequests()
+				.and()
+				.formLogin()
 					//submit login
 					.loginProcessingUrl("/j_spring_security_check")//submit xu ly login
 					.loginPage("/login")
@@ -76,6 +81,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					.failureUrl("/login?error")//loi dang nhap
 					.usernameParameter("username")//lay gia tri username tu form
 					.passwordParameter("password")//lay gia tri password tu form
+				.and()
+					.oauth2Login()
+					.loginPage("/login")
+					.userInfoEndpoint()
+						.userService(oauthUserService)
+					.and()
+					.successHandler(oAuth2LoginSuccessHandler)
+					//.defaultSuccessUrl("/list")
+				
 					//cau hinh logout
 					.and()
 					.logout()
@@ -84,4 +98,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						.logoutSuccessUrl("/login");
 					
 	}
+	
+	@Autowired
+	private CustomOAuth2UserService oauthUserService;
+	
+	@Autowired
+	private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 }
+
+
