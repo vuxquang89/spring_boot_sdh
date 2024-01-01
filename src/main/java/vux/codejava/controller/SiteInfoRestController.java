@@ -172,18 +172,18 @@ public class SiteInfoRestController {
 				try {
 					
 					if(customSiteInfo.getFiles() != null && customSiteInfo.getFiles().length > 0) {
-						String path = OPT_FOLDER + "/" + customSiteInfo.getDistrictId() + "/" + customSiteInfo.getSiteId();
+						String path = UPLOAD_FOLDER+"/"+OPT_FOLDER + "/" + customSiteInfo.getDistrictId() + "/" + customSiteInfo.getSiteId();
 						List<String> fileNames = saveUploadedFiles(Arrays.asList(customSiteInfo.getFiles()), path);
 						Set<SiteImage> images = new HashSet<SiteImage>();
 						for(String name : fileNames) {
 							String fileNameResize = "";
 							try {
-								fileNameResize = Thumbnail.resize_100(UPLOAD_FOLDER+"/"+path, name);
+								fileNameResize = Thumbnail.resize_100(path, name);
 								
 							} catch (BaseException e) {								
 								e.printStackTrace();
 							}
-							SiteImage siteImage = siteImageServices.save(new SiteImage(name, fileNameResize, UPLOAD_FOLDER+"/"+path, saveSiteInfo));
+							SiteImage siteImage = siteImageServices.save(new SiteImage(name, fileNameResize, path, saveSiteInfo));
 							images.add(siteImage);
 						}
 						siteInfoResponseEntity.getContent().setSiteImages(images);
@@ -241,18 +241,18 @@ public class SiteInfoRestController {
 			
 			try {
 				if(files.getFiles() != null && files.getFiles().length > 0) {
-					String path = OPT_FOLDER + "/" + districtId + "/" + siteId;
+					String path = UPLOAD_FOLDER+"/"+OPT_FOLDER + "/" + districtId + "/" + siteId;
 					List<String> fileNames = saveUploadedFiles(Arrays.asList(files.getFiles()), path);
 					
 					for(String name : fileNames) {
 						String fileNameResize = "";
 						try {
-							fileNameResize = Thumbnail.resize_100(UPLOAD_FOLDER+"/"+path, name);
+							fileNameResize = Thumbnail.resize_100(path, name);
 							
 						} catch (BaseException e) {								
 							e.printStackTrace();
 						}
-						siteImageServices.save(new SiteImage(name, fileNameResize, UPLOAD_FOLDER+"/"+path, siteInfo));
+						siteImageServices.save(new SiteImage(name, fileNameResize, path, siteInfo));
 						
 					}
 					
