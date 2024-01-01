@@ -52,6 +52,15 @@ public class AdminController {
 		return "admin/device";
 	}
 	
+	@GetMapping("/port")
+	public String showPortPage(Model model) {
+		
+		model.addAttribute("pagePath", "port");
+		model.addAttribute("pageTitle", "Thiết bị - SDH");
+		
+		return "admin/port";
+	}
+	
 	@GetMapping("/site")
 	public String showSitePage(Model model) {
 		List<District> districts = districtServices.findAll();

@@ -88,6 +88,7 @@ $(document).ready(function(){
 	setDefaultMonth();
 	
 	$('#btnExportExcel').on('click', exportExcel);
+	//$('#btnExportExcel').on('click', getDataGoogleSheet);
 })
 
 function setDefaultBoxAction(id, value){
@@ -105,6 +106,19 @@ function setDefaultMonth(){
 	const month=("0" + (date.getMonth() + 1)).slice(-2);
 	const year=date.getFullYear()
 	monthControl.val(`${year}-${month}`);
+}
+
+function getDataGoogleSheet(){
+	url = contextPath + "api/shift/getData";
+	
+	$.get(url, function(responseJson){
+		console.log("get data google api");
+		console.log(responseJson);
+	}).fail(function(error){
+		alert("failed");
+	}).done(function(){
+		console.log("done");
+	});
 }
 
 function exportExcel(){

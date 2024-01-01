@@ -18,7 +18,6 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import vux.codejava.config.oauth.CustomOAuth2User;
 import vux.codejava.entity.CustomUserDetails;
-import vux.codejava.entity.User;
 import vux.codejava.entity.shift.DetailValue;
 import vux.codejava.entity.shift.KeyEntity;
 import vux.codejava.entity.shift.ShiftDetailEntity;
@@ -40,7 +37,6 @@ import vux.codejava.service.GoogleApiService;
 import vux.codejava.service.KeyServices;
 import vux.codejava.service.ShiftDetailServices;
 import vux.codejava.service.ShiftServices;
-import vux.codejava.service.UserServices;
 import vux.codejava.util.PrincipalObject;
 
 @Controller
@@ -76,25 +72,7 @@ public class ShiftController {
 		model.addAttribute("pageTitle", "Giao - Nhận ca");
 		model.addAttribute("pagePath", "shift");
 		
-		try {
-			List<String> nameShifts = googleApiService.readDataFromGoogleSheet(district);
-			
-			for(String name : nameShifts) {
-				if(name.toUpperCase().indexOf(fullname.toUpperCase()) >= 0) {
-					
-					inShift = true;
-					break;
-				}
-			}
-		} catch (GeneralSecurityException | IOException e) {
-			// TODO Auto-generated catch block
-			
-			System.out.println("error");
-			e.printStackTrace();
-			model.addAttribute("error","error : " + e);
-		}
-		
-		
+				
 		List<KeyEntity> keyEntities = keyServices.findAll();
 		KeyEntity keyMT = getEntity(keyEntities, "MT");
 		KeyEntity keyMB = getEntity(keyEntities, "MB");
@@ -115,12 +93,33 @@ public class ShiftController {
 		shiftResponseMB.setAction();
 		shiftResponseMB.setInShift(inShift);
 		
+//		try {
+//			List<String> nameShifts = googleApiService.readDataFromGoogleSheet(district);
+			
+//			for(String name : nameShifts) {
+//				if(name.toUpperCase().indexOf(fullname.toUpperCase()) >= 0) {
+//					
+//					inShift = true;
+//					break;
+//				}
+//			}
+//			return false;
+//		} catch (GeneralSecurityException | IOException e) {
+//			// TODO Auto-generated catch block
+//			
+//			System.out.println("error");
+//			
+//			e.printStackTrace();
+//			model.addAttribute("error",e);
+////			return false;
+//		}
+		
 		if(district.equalsIgnoreCase("MT")) {
 			if(keyMT.getKeyStatus() && keyMT.getUsername().equalsIgnoreCase(userDetails.getUsername())) {
 				shiftResponseMT.setUsername("me");
 				shiftResponseMT.setForm(false);
 			}else {
-				
+				shiftResponseMT.setInShift(isInShift(fullname, district));
 				shiftResponseMT.setForm(true);
 			}
 			shiftResponseMB.setForm(true);
@@ -130,7 +129,7 @@ public class ShiftController {
 				shiftResponseMB.setUsername("me");
 				shiftResponseMB.setForm(false);
 			}else {
-				
+				shiftResponseMB.setInShift(isInShift(fullname, district));
 				shiftResponseMB.setForm(true);
 			}
 			model.addAttribute("formMT", true);
@@ -152,13 +151,26 @@ public class ShiftController {
 					}
 				}else {
 					model.addAttribute("statusSG", false);
+					shiftResponseMT.setInShift(isInShift(fullname, "MT"));
 					shiftResponseMT.setForm(true);
 					shiftResponseMB.setForm(true);
+					if(shiftResponseMT.getInShift()) {
+						shiftResponseMB.setInShift(false);
+					}else {
+						shiftResponseMB.setInShift(isInShift(fullname, "MB"));
+					}
+					
 				}
 			}else {
 				model.addAttribute("statusSG", false);
+				shiftResponseMT.setInShift(isInShift(fullname, "MT"));
 				shiftResponseMT.setForm(true);
 				shiftResponseMB.setForm(true);
+				if(shiftResponseMT.getInShift()) {
+					shiftResponseMB.setInShift(false);
+				}else {
+					shiftResponseMB.setInShift(isInShift(fullname, "MB"));
+				}
 			}
 			
 			
@@ -170,6 +182,26 @@ public class ShiftController {
 		
 		
 		return "shift";
+	}
+	
+	private boolean isInShift(String fullname, String district) {
+		try {
+			List<String> nameShifts = googleApiService.readDataFromGoogleSheet(district);
+			
+			for(String name : nameShifts) {
+				if(name.toUpperCase().indexOf(fullname.toUpperCase()) >= 0) {
+					
+					return true;
+				}
+			}
+			return false;
+		} catch (GeneralSecurityException | IOException e) {
+			// TODO Auto-generated catch block
+			
+			System.out.println("error");
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	/**

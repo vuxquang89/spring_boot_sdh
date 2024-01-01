@@ -1,5 +1,6 @@
 package vux.codejava.util;
 
+import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -20,19 +21,17 @@ import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.http.converter.json.GsonFactoryBean;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GoogleApiUtil {
 
-	private static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
+	private static final String APPLICATION_NAME = "Google API Integration";
 	  private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-	  private static final String TOKENS_DIRECTORY_PATH = "tokens";
+	  private static final String TOKENS_DIRECTORY_PATH = "/var/tmp/tokens/path";
+//	  private static final String TOKENS_DIRECTORY_PATH = "tokens/path";
 
 	  /**
 	   * Global instance of the scopes required by this quickstart.
@@ -49,7 +48,7 @@ public class GoogleApiUtil {
 	   * @return An authorized Credential object.
 	   * @throws IOException If the credentials.json file cannot be found.
 	   */
-	  private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
+	  private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
 	      throws IOException {
 	    // Load client secrets.
 	    InputStream in = GoogleApiUtil.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
@@ -65,9 +64,36 @@ public class GoogleApiUtil {
 	        .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
 	        .setAccessType("offline")
 	        .build();
-	    LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+	    LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(32838).build();
+	    //return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+//	    LocalServerReceiver receiver = new LocalServerReceiver.Builder().setHost("10.255.254.111").setPort(8888).build();
+//	    LocalServerReceiver receiver = new LocalServerReceiver();
 	    return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
 	  }
+	  
+	  public String getURL(final NetHttpTransport HTTP_TRANSPORT)
+		      throws IOException {
+		    // Load client secrets.
+		    InputStream in = GoogleApiUtil.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+		    if (in == null) {
+		      throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
+		    }
+		    GoogleClientSecrets clientSecrets =
+		        GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+
+		    // Build flow and trigger user authorization request.
+		    GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+		        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
+		        .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
+		        .setAccessType("offline")
+		        .build();
+		    LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(51607).build();
+		    String redirectUri = receiver.getRedirectUri();
+		      AuthorizationCodeRequestUrl authorizationUrl =
+		          flow.newAuthorizationUrl().setRedirectUri(redirectUri);
+		      
+		    return authorizationUrl.build();
+		  }
 	  
 	  public List<String> getDataFromSheet(String nameSheet) throws GeneralSecurityException, IOException {
 		  final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -108,7 +134,26 @@ public class GoogleApiUtil {
 	   * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
 	   */
 //	  public static void main(String... args) throws IOException, GeneralSecurityException {
-//	    // Build a new authorized API client service.
-//	    
-//	  }
+//		    // Build a new authorized API client service.
+//		    final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+//		    final String spreadsheetId = "1toNRoC9rX7tAD3mdgYfHveOJldlL75BGwDYs0d23HYI";
+//		    final String range = "Data MT!B1:E1";
+//		    Sheets service =
+//		        new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+//		            .setApplicationName(APPLICATION_NAME)
+//		            .build();
+//		    ValueRange response = service.spreadsheets().values()
+//		        .get(spreadsheetId, range)
+//		        .execute();
+//		    List<List<Object>> values = response.getValues();
+//		    if (values == null || values.isEmpty()) {
+//		      System.out.println("No data found.");
+//		    } else {
+//		      System.out.println("Name, Major");
+//		      for (List row : values) {
+//		        // Print columns A and E, which correspond to indices 0 and 4.
+//		        System.out.printf("%s, %s\n", row.get(0), row.get(3));
+//		      }
+//		    }
+//		  }
 }
