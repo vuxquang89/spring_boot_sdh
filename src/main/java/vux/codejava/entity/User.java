@@ -39,7 +39,7 @@ public class User {
 	private String email;
 	
 	@Column(name = "role")
-	private Integer role = 2;
+	private Integer role = 3;//default role user
 	
 	@Column(name = "enabled")	
 	private boolean enabled = true;

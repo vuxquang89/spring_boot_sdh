@@ -57,10 +57,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeHttpRequests().antMatchers("/user/**", 
 				"/operate/**", 
 				"/profile",
-				"/shift").hasAnyAuthority("ROLE_ADMIN","ROLE_USER", "ROLE_ROOT");
+				"/shift").hasAnyAuthority("ROLE_ADMIN","ROLE_USER", "ROLE_ROOT", "ROLE_EDITOR");
 		
 		//trang chi danh cho ADMIN
-		http.authorizeHttpRequests().antMatchers("/admin", "/admin/**").hasAnyAuthority("ROLE_ROOT", "ROLE_ADMIN");
+		http.authorizeHttpRequests().antMatchers("/admin", "/admin/**").hasAnyAuthority("ROLE_ROOT", "ROLE_ADMIN", "ROLE_EDITOR");
 		
 		//khi nguoi dung login voi vai tro xx
 		//nhung co gang dang nhap trang cua yy

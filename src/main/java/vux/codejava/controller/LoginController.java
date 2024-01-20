@@ -47,7 +47,7 @@ public class LoginController {
 		System.out.println(role);
 		if(role.equals("ROLE_USER")) {
 			return "redirect:/index";
-		}else if(role.equals("ROLE_ADMIN") || role.equals("ROLE_ROOT")){
+		}else if(role.equals("ROLE_ADMIN") || role.equals("ROLE_ROOT") || role.equals("ROLE_EDITOR")){
 			return "redirect:/admin";
 		}
 		return "redirect:/index";
