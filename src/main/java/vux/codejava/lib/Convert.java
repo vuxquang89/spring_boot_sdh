@@ -19,7 +19,9 @@ public class Convert {
 		case 1:
 			roles.add("ROLE_ADMIN");
 			break;
-			
+		case 2:
+			roles.add("ROLE_EDITOR");
+			break;
 		default:
 			roles.add("ROLE_USER");
 			break;
@@ -41,11 +43,17 @@ public class Convert {
 	
 	public static String getDate(String dateTime) {
 		String dateTimeString = dateTime.replace("T", " ");
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		//LocalDateTime localDateTime = LocalDateTime.parse(dateTime);
 
 		//return localDateTime.toLocalDate().toString();
 		return LocalDateTime.parse(dateTimeString, formatter).toString();
+	}
+	
+	
+	public static String dateToString(String dateTime) {
+		String dateTimeString = dateTime.replace("T", " ");
+		return dateTimeString;
 	}
 	
 	public static int durationBetweenLocalDateTime(LocalDateTime from, LocalDateTime to) {

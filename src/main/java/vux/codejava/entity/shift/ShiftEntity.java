@@ -95,7 +95,7 @@ public class ShiftEntity extends BaseShiftEntity{
 		String noteAction = "";
 		for(ShiftDetailEntity shiftDetail : shiftDetails) {
 			if(shiftDetail.getAction() == 1) {
-				noteAction += "- Sự cố " + shiftDetail.getCables().getCableName() + " : " + shiftDetail.getNoteAction() + "/n";
+				noteAction += shiftDetail.getCables().getCableName() + " : " + shiftDetail.getNoteAction() + "\n";
 			}
 		}
 		return noteAction;

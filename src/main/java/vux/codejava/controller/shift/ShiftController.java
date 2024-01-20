@@ -310,8 +310,9 @@ public class ShiftController {
 	@GetMapping("/shift/export/excel/{month}/{filter}")
     public ResponseEntity<?> exportToExcel(HttpServletResponse response,
     		@PathVariable("month") String month,
-    		@PathVariable("filter") int filter) throws IOException {
-		
+    		@PathVariable("filter") int filter,
+    		Principal principal) throws IOException {
+		CustomUserDetails userDetails = principalObject.getCustomUserDetails(principal);
 		//List<ShiftEntity> listShifts = shiftServices.listAll();
 		List<ShiftEntity> listShifts = shiftServices.listByDateReceive(month);//sheet giao-nhan ca
 		List<ShiftEntity> listShiftActions = shiftServices.listByDateShift(month);//sheet su kien
@@ -328,7 +329,7 @@ public class ShiftController {
         InputStreamResource file = new InputStreamResource(excelExport.export(filter, month));
 
         return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=users_" + currentDateTime + ".xlsx")
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=user_" +userDetails.getUsername() +"_"+ currentDateTime + ".xlsx")
             .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
             .body(file);
         
