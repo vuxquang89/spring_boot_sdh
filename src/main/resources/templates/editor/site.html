@@ -3,15 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <title>[[${pageTitle}]]</title>
-<th:block th:include = "@{admin/header}"></th:block>
+<th:block th:include = "@{editor/header}"></th:block>
 </head>
 <body>
-	<th:block th:include = "@{admin/navbar}"></th:block>
-	<th:block th:include = "@{admin/canvas}"></th:block>
+	<th:block th:include = "@{editor/navbar}"></th:block>
+	<th:block th:include = "@{editor/canvas}"></th:block>
 
 	<main class="mt-5 pt-3">
-		<th:block sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_ROOT')">
-		
         <div class="container-fluid">
         	<div class="position-fixed top-0 end-0 p-2 alert-top" style="z-index: 9999"></div>
         	
@@ -21,7 +19,7 @@
                 </div>
             </div>
 
-			
+
             <div class="row pt-3">
                 <div class="col col-md-6">
                     <div class="row">
@@ -417,8 +415,6 @@
 
 
         <!--end modal-->
-        
-        </th:block>
 
     </main>
     
@@ -462,7 +458,7 @@
     <script th:src="@{/js/jquery.dataTables.min.js}"></script>
     <script th:src="@{/js/dataTables.bootstrap5.min.js}"></script>
     <script th:src="@{/js/script.js}"></script>
-    <script type="text/javascript" th:src="@{/js/sites.js}"></script>
+    <script type="text/javascript" th:src="@{/js/editor/sites.js}"></script>
     <script th:src="@{/js/alerts.js}"></script>
     <script th:src="@{/js/paging.js}"></script>
 

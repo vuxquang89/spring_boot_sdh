@@ -44,11 +44,13 @@ public class LoginController {
 	public String loginAccount(RedirectAttributes rAttributes, Principal principal) {
 		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
 		String role = getRole(userDetails.getAuthorities());
-		System.out.println(role);
+		System.out.println("ROLE------------" + role);
 		if(role.equals("ROLE_USER")) {
 			return "redirect:/index";
-		}else if(role.equals("ROLE_ADMIN") || role.equals("ROLE_ROOT") || role.equals("ROLE_EDITOR")){
+		}else if(role.equals("ROLE_ADMIN") || role.equals("ROLE_ROOT")){
 			return "redirect:/admin";
+		}else if(role.equals("ROLE_EDITOR")) {
+			return "redirect:/editor";
 		}
 		return "redirect:/index";
 	}

@@ -3,16 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <title>[[${pageTitle}]]</title>
-<th:block th:include = "@{admin/header}"></th:block>
+<th:block th:include = "@{editor/header}"></th:block>
 </head>
 <body>
-	<th:block th:include = "@{admin/navbar}"></th:block>
-	<th:block th:include = "@{admin/canvas}"></th:block>
+	<th:block th:include = "@{editor/navbar}"></th:block>
+	<th:block th:include = "@{editor/canvas}"></th:block>
 	
 	<main class="mt-5 pt-3">
-	
-	<th:block sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_ROOT')">
-	
         <div class="container-fluid">
 			<div class="position-fixed top-0 end-0 p-2 alert-top" style="z-index: 9999">
 			       
@@ -107,13 +104,9 @@
                     </div>
                 </div>
             </div>
-            <th:block sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_ROOT')">
-            <div id="cardDistrict" class="row pt-2">
-            </th:block>
             
-            <th:block sec:authorize="hasRole('ROLE_EDITOR')">
-            <div id="cardDistrictEditor" class="row pt-2">
-            </th:block>
+            <div id="cardDistrict" class="row pt-2">
+            
 			<!-- <th:block th:each="district : ${listDistricts}">
 			
                 <div class="col-md-4 mb-4 card-district" th:attr="data-id=${district.id}, data-name=${district.name}">
@@ -347,10 +340,9 @@
         </div>
         
         </div>
-    </th:block>
-    </main>     
+    </main> 
     
-	<!-- Back to top button -->
+    <!-- Back to top button -->
 	<button
 	        type="button"
 	        class="btn btn-danger btn-floating btn-lg"
@@ -384,8 +376,7 @@
     <script th:src="@{/js/jquery.dataTables.min.js}"></script>
     <script th:src="@{/js/dataTables.bootstrap5.min.js}"></script>
     <script th:src="@{/js/script.js}"></script>
-    <script type="text/javascript" th:src="@{/js/districts.js}"></script>
+    <script type="text/javascript" th:src="@{/js/editor/districts.js}"></script>
     <script th:src="@{/js/alerts.js}"></script>
-    
 </body>
 </html>

@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 var btnOpenModalAddDistrict,btnAddDistrict, btnEditDistrict;
 var btnAddSite, btnAddFast;
 var fieldDistrictName, fieldSiteName;
@@ -67,6 +71,7 @@ $(document).ready(function(){
 	});
 	
 	$('#btnCancelSelectDevice').click(function(){
+		$( ".checkAll").prop('checked', false);
 		setOffLoadDevice();
 	});
 	
@@ -128,6 +133,7 @@ $(document).ready(function(){
 		$('#staticAddDeviceSiteLabel').text(''); 
 		$('#cardAddDevices').html('');
 		$('#staticAddDeviceSite').modal('toggle');
+		$( ".checkAll").prop('checked', false);
 	});
 	
 	$('.btn-close-modal-edit-site').click(function(){
@@ -506,6 +512,7 @@ function addDeviceSite(){
 	$.each($("input[type='checkbox']:checked"),function(){
 		var deviceId;
 	   	deviceId = $(this).val();
+		
 		if(deviceId != ""){
 			arrayId.push(deviceId);
 		}
@@ -553,8 +560,6 @@ function addElementDistrict(districtId, districtName){
                                         'data-toggle="modal" title="Thêm site cho khu vực" data-target="#staticAddSite">+</button>\n'+
                                     '<button class="btn btn-outline-warning btn-sm text-warning btn-edit-district" title="Sửa tên khu vực" '+
 	                                        'data-toggle="modal" data-target="#staticEditDistrict" type="button"><i class="bi bi-pencil-fill"></i></button>\n'+
-                                    '<button class="btn btn-outline-danger btn-sm fw-bold btn-delete-district" type="button"'+
-                                        'title="Xóa khu vực">x</button>'+
                                 '</div></div></div>'+
                         '<div class="card-body">'+
                         	'<div class="pb-2 border-bottom input-group input-group-sm"><input id="inputItem'+districtId+'" class="form-control" type="text" onkeyup="searchItem('+districtId+')"></div>'+
@@ -649,8 +654,7 @@ function loadDistrict(){
 	                                        'data-toggle="modal" title="Thêm site cho khu vực" data-target="#staticAddSite">+</button>\n'+
 	                                    '<button class="btn btn-outline-warning btn-sm text-warning btn-edit-district" title="Sửa tên khu vực" '+
 	                                        'data-toggle="modal" data-target="#staticEditDistrict" type="button"><i class="bi bi-pencil-fill"></i></button>\n'+
-	                                    '<button class="btn btn-outline-danger btn-sm fw-bold btn-delete-district" type="button"'+
-	                                        'title="Xóa khu vực">x</button>'+
+	                                    
 	                                '</div></div></div>'+
 	                        '<div class="card-body">'+
 	                        	'<div class="pb-2 border-bottom input-group input-group-sm"><input id="inputItem'+district.id+'" class="form-control" type="text" onkeyup="searchItem('+district.id+')"></div>'+
@@ -664,7 +668,7 @@ function loadDistrict(){
 	                                    '<div class="col-md-5 pe-0">'+
 	                                        '<button title="Thêm thiết bị cho Site" class="btn btn-outsite btn-sm text-primary btn-add-device-site" type="button"><i class="bi bi-plus-square"></i></button>'+
 	                                        '<button title="Sửa tên Site" class="btn btn-outsite btn-sm text-warning btn-edit-site" data-toggle="modal" data-target="#staticEditSite" type="button"><i class="bi bi-pencil-fill"></i></button>'+
-	                                    	'<button title="Xóa Site" class="btn btn-outsite btn-sm text-danger btn-delete-site" type="button"><i class="bi bi-trash3-fill"></i></button></div></div>');
+	                                    	'</div></div>');
 					});
 				}else{
 					cardDistrict.find('#site-content-'+district.id).html('');
@@ -676,7 +680,7 @@ function loadDistrict(){
 	                                    '<div class="col-md-5 pe-0">'+
 	                                        '<button title="Thêm thiết bị cho Site" class="btn btn-outsite btn-sm text-primary btn-add-device-site" type="button"><i class="bi bi-plus-square"></i></button>'+
 	                                        '<button title="Sửa tên Site" class="btn btn-outsite btn-sm text-warning btn-edit-site" data-toggle="modal" data-target="#staticEditSite" type="button"><i class="bi bi-pencil-fill"></i></button>'+
-	                                    	'<button title="Xóa Site" class="btn btn-outsite btn-sm text-danger btn-delete-site" type="button"><i class="bi bi-trash3-fill"></i></button></div></div>');
+	                                    	'</div></div>');
 					});
 				}
 		});

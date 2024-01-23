@@ -15,15 +15,15 @@
                             <span>Khu vực</span>
                         </a>
                     </li>
-                    
+                    <th:block sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_ROOT')">
                     <li class="my-4">
                         <hr class="dropdown-divider">
                     </li>
-
+					
+					
 					<li>
                         <div class="text-muted small fw-bold text-uppercase px-3">Vật tư</div>
                     </li>
-                    
                     <li>
                         <a th:href="@{/admin/category}" class="nav-link px-3 category">
                         	<span class="me-2"><i class="bi bi-card-checklist"></i></span>
@@ -37,7 +37,7 @@
                             <span>Thiết bị</span>
                         </a>
                     </li>
-					
+					</th:block>
                     
                     <li class="my-4">
                         <hr class="dropdown-divider">
@@ -52,7 +52,7 @@
                             <span>Sites</span>
                         </a>
                     </li>
-                    
+                    <th:block sec:authorize="hasRole('ROLE_ROOT')">
                     <li class="my-4">
                         <hr class="dropdown-divider">
                     </li>
@@ -64,6 +64,7 @@
                             <span>Port</span>
                         </a>
                     </li>
+                    </th:block>
                 </ul>
             </nav>
         </div>
