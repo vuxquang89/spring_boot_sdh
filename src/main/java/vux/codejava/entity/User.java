@@ -53,6 +53,9 @@ public class User {
 	@Column(name = "full_name")
 	private String fullName;
 	
+	@Column(name = "name")
+	private String name;
+	
 	//@OneToMany(cascade = CascadeType.ALL,
 	//		fetch = FetchType.LAZY,
 	//		mappedBy = "user")
@@ -84,6 +87,14 @@ public class User {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getUsername() {

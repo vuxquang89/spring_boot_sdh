@@ -52,6 +52,17 @@ public class AdminController {
 		return "admin/device";
 	}
 	
+	@GetMapping("/landingpage")
+	public String showLandingPage(Model model) {
+		List<Category> listCategorys = categoryServices.listAll();
+		
+		model.addAttribute("pagePath", "landingpage");
+		model.addAttribute("pageTitle", "LandingPage - SDH");
+		model.addAttribute("listCategorys", listCategorys);
+		
+		return "admin/landingpage";
+	}
+	
 	@GetMapping("/port")
 	public String showPortPage(Model model) {
 		

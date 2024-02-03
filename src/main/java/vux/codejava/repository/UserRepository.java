@@ -1,5 +1,6 @@
 package vux.codejava.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -14,6 +15,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("SELECT u FROM users u where u.username = ?1")
 	User findByUsername(String username);
+	
+	@Transactional
+	@Modifying
+	@Query(value="SELECT * FROM users WHERE role = 3 AND enabled = 1", nativeQuery = true)
+	List<User> findAllUser();
 
 	public  Optional<User> findByEmail(String email);
 	

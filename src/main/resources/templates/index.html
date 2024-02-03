@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>[[${pageTitle}]] - SDH</title>
+<th:block th:include = "@{header}"></th:block>
+<link th:href="@{/css/mystyle.css}" rel="stylesheet">
+</head>
+<body>
+
+	<th:block th:include = "@{navbar}"></th:block>	
+  	<th:block th:include = "@{banner}"></th:block>
+  	
+  	<main class="container">
+  		<div class="row justify-content-center">
+  			<div class="col-12">
+  				<h4 class="mbr-section-title mbr-fonts-style display">CÁC CÁ NHÂN TIÊU BIỂU</h4>
+  			</div>
+  			<th:block th:each="item : ${excellentIndividuals}">
+  				<div class="item features-image col-12 col-lg-4 col-md-6">
+  				<div class="item-wrapper">
+	  				<div class="item-img">
+	  					<img th:src="${item.imageAvatar}" alt="avatar">
+	  				</div>
+	  				<div class="item-content">
+	  					<h4 class="mbr-card-title mbr-fonts-style display-7">
+                                <strong class="text-uppercase" th:text="${item.fullName}"></strong>
+                        </h4>
+                        <p class="mbr-desc mbr-fonts-style display-7" th:text="${item.content}">
+                                Dentist
+                        </p>
+	  				</div>
+  				</div>
+  			</div>
+  			</th:block>
+  			
+  			
+  			<div class="col-12"></div>
+  		</div>
+  	</main>
+	
+	<!-- FOOTER -->
+  <footer class="container">
+    
+    <p>© 2022 Company, <a href="#">SCTV</a></p>
+  </footer>
+	
+	<script type="text/javascript">
+    	var contextPath = "[[@{/}]]";
+    	var pagePath = "[[${pagePath}]]";
+    	var current = document.getElementsByClassName(pagePath);
+        current[0].className += " active";
+    	
+    	var csrfHeader = "[[${_csrf.headerName}]]";
+    	var csrfToken = "[[${_csrf.token}]]";
+    </script> 
+    <script th:inline="javascript">
+	    /*<![CDATA[*/
+			var categorys = /*[[${listCategorys}]]*/ "Test";
+		/*	]]>*/
+		
+    </script>
+	
+	<script th:src="@{/js/jquery-3.5.1.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+ 
+	<!-- <script th:src="@{/js/bootstrap.bundle.min.js}"></script>  -->    
+    <script th:src="@{/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/js/dataTables.bootstrap5.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+	
+</body>
+</html>

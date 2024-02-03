@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>[[${pageTitle}]] - SDH</title>
+<th:block th:include = "@{header}"></th:block>
+<link th:href="@{/css/mystyle.css}" rel="stylesheet">
+</head>
+<body>
+
+	<th:block th:include = "@{admin/navbar}"></th:block>
+	<th:block th:include = "@{admin/canvas}"></th:block>
+	
+	<main class="mt-5 pt-3">
+		<th:block sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_ROOT')">
+		<div class="container-fluid">
+        	<div class="position-fixed top-0 end-0 p-2 alert-top" style="z-index: 9999"></div>
+        	
+            <div class="row">
+                <div class="col-md-12 fw-bold fs-3">
+                    Hiển thị LandingPage
+                </div>
+            </div>
+            
+            <div class="row pt-3">
+            	<div class="col col-md-12">
+                    <div class="row float-end">
+                        <div class="col-sm-12">
+                            <button id="btnAddItem" class="btn btn-primary" type="button">
+                                <i class="bi bi-plus-lg"></i>Thêm mới</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <label class="fw-bold">Các cá nhân tiêu biểu</label>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="row table-responsive">
+                                <table id="tableSiteInfo" class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th scope="col">#</th>                                            
+                                            <th scope="col" width="350" class="text-center">Tên cá nhân</th>
+                                            <th scope="col" width="400" class="text-center">Mô tả</th>
+                                            <th scope="col" width="150" class="text-center">Ảnh đại diện</th>
+                                            <th scope="col" class="text-center">Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    	<tr id="contentNoneData"><td colspan="9" class="text-center">Không có dữ liệu!</td><tr>
+                                    	
+                                    </tbody>
+                                </table>
+                                <ul id="pagination" class="pagination pagination-sm justify-content-end">
+                                    
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+		
+		<!-- model add new item -->
+		<div class="modal fade" id="modalAddItem" role="dialog" data-backdrop="static" tabindex="-1" aria-labelledby="modalAddItemTitle"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAddItemTitle">Thêm mới cá nhân tiêu biểu</h5>
+                        <button type="button" class="btn-close btn-close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-2 row">
+                        	<div class="row">
+	                            <label id="label_header_title" class="col-sm-4 col-form-label fw-bold">Chọn
+	                                cá nhân</label>
+	                            <p class="col-sm-6 col-form-label invalid-feedback text-left"></p>	                            
+                            </div>
+                            
+                            <div class="col-sm-12 mb-2">
+                            	<div class="col-sm-6">
+                                    <input type="text" class="form-control form-control-sm inputKeySearchUser" placeholder="Tìm tên ...">
+                                </div>
+                                <hr class="m-t-1 m-b-1">
+                            </div>
+                            
+                            <div class="col-sm-12">
+                                <div class="row" id="modalBodyItemContent"></div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <label for="content" class="col-sm-3 col-form-label fw-bold">Mô tả</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="5" id="content" name="text"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <label for="imageUser" class="col-sm-3 col-form-label fw-bold">Ảnh đại diện</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="file" id="imageUser" accept="image/png, image/jpg, image/jpeg">
+                                
+                            </div>
+                        </div>
+
+                
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary btn-sm btn-close-modal" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" id="btnAddNewItem" class="btn btn-primary btn-sm">
+	                        <span></span>
+	                        Thêm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end modal-->
+        
+        <!-- modal edit item-->
+        <div class="modal fade" id="editModalScrollable" role="dialog" data-backdrop="static" tabindex="-1" aria-labelledby="editModalScrollableTitle"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalScrollableTitle">Cap nhat Truc M1 - Sai Gon</h5>
+                        <button type="button" class="btn-close btn-close-edit-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-2 row">
+                            <label for="eidtDeviceName" class="col-sm-3 col-form-label fw-bold">Tên cá nhân</label>
+                            <div class="col-sm-9">
+                                <input readonly type="text" class="form-control-plaintext" id="editName"
+                                    value="XDM-1000 Shelf">
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <label for="editNote" class="col-sm-3 col-form-label fw-bold">Mô tả</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="3" id="editContent" name="text"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <label for="imageDevice" class="col-sm-3 col-form-label fw-bold">Ảnh đại diện</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="file" id="editImageAvatar" accept="image/png, image/jpg, image/jpeg" multiple>
+                            </div>
+                            <div class="mt-2 col-sm-12">
+                            	<div class="row row-container-image">
+                            	
+                            	</div>
+                                
+                            </div>
+                        </div>
+
+                        
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary btn-sm btn-close-edit-modal" data-bs-dismiss="modal">Đóng</button>
+                        
+                        <button class="btn btn-primary btn-sm btn-edit-modal-item">
+							  <span></span>
+							  Cập nhật
+						</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end modal-->
+
+		</th:block>
+	</main>
+	
+	<!-- Back to top button -->
+	<button
+	        type="button"
+	        class="btn btn-danger btn-floating btn-lg"
+	        id="btn-back-to-top"
+	        >
+	        
+	  	<i class="bi bi-arrow-up"></i>
+	</button>
+	<div class="modal-loading"></div> 
+    <script type="text/javascript">
+    	var contextPath = "[[@{/}]]";
+    	
+    	var pagePath = "[[${pagePath}]]";
+    	var pageEnd = 1;
+    	var current = document.getElementsByClassName(pagePath);
+        current[0].className += " active";
+
+    	//var csrfToken = $("meta[name='_csrf']").attr("content");
+    	//var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+    	
+    	var csrfHeader = "[[${_csrf.headerName}]]";
+    	var csrfToken = "[[${_csrf.token}]]";
+    	
+    	
+    </script> 
+    <script th:inline="javascript">
+	    /*<![CDATA[*/
+			var categorys = /*[[${listCategorys}]]*/ "Test";
+		/*	]]>*/
+		
+    </script>
+    <!-- <th:block th:include = "@{admin/footer}"></th:block> -->
+    <script th:src="@{/js/jquery-3.5.1.js}"></script> 
+	<script th:src="@{/js/bootstrap.min.js}"></script> 
+	<!-- <script th:src="@{/js/bootstrap.bundle.min.js}"></script>  -->
+    <script th:src="@{/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/js/dataTables.bootstrap5.min.js}"></script>
+    <script th:src="@{/js/script.js}"></script>
+    <script type="text/javascript" th:src="@{/js/landingpage.js}"></script>
+    <script th:src="@{/js/alerts.js}"></script>
+    <script th:src="@{/js/paging.js}"></script>
+</body>
+</html>

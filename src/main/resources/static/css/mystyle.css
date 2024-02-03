@@ -139,3 +139,58 @@ legend.scheduler-border {
 .relative{
 	position: relative;
 }
+
+/*======style landing page=======*/
+.justify-content-center{
+	justify-content:center;
+}
+.mbr-section-title{
+	margin-top:30px;
+	margin-bottom:50px;
+	color: #212529;
+	text-align:center;
+}
+
+.display{
+	font-family:'Gloock', serif;
+	font-size:2.25rem;
+	line-height:1;
+	background-color: #e4ff00fc;
+    padding: 5px 0px 5px 0px;
+}
+
+.item{
+	margin-bottom:50px;
+	position:relative;
+}
+
+.item-wrapper{
+	overflow:hidden;
+}
+
+.item .item-wrapper .item-img{
+	overflow:hidden;
+	margin-bottom:20px;
+	border-radius:50%;
+}
+
+.item .item-wrapper .item-img img{
+	height:370px;
+	object-fit:cover;
+	
+	transition:all 0.3s ease-in-out;
+}
+
+.item .item-wrapper .item-img img:hover{
+	
+	transform:scale(1.05);
+	
+}
+
+img{
+	display:block;
+	width: 100%;
+}
+.text-uppercase{
+	text-transform: uppercase;
+}

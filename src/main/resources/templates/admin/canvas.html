@@ -16,7 +16,7 @@
                         </a>
                     </li>
                     <th:block sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_ROOT')">
-                    <li class="my-4">
+                    <li class="mt-3">
                         <hr class="dropdown-divider">
                     </li>
 					
@@ -39,7 +39,7 @@
                     </li>
 					</th:block>
                     
-                    <li class="my-4">
+                    <li class="mt-3">
                         <hr class="dropdown-divider">
                     </li>
 
@@ -52,14 +52,30 @@
                             <span>Sites</span>
                         </a>
                     </li>
+                    
+                    <li class="mt-3">
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                        <div class="text-muted small fw-bold text-uppercase px-3">Chức năng</div>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin/landingpage}" class="nav-link px-3 landingpage">
+                            <span class="me-2"><i class="bi bi-speedometer2"></i></span>
+                            <span>LandingPage</span>
+                        </a>
+                    </li>
+                    
+                    
                     <th:block sec:authorize="hasRole('ROLE_ROOT')">
-                    <li class="my-4">
+                    <li class="mt-3">
                         <hr class="dropdown-divider">
                     </li>
 
                     
                     <li>
-                        <a th:href="@{/admin/port}" class="nav-link px-3 site">
+                        <a th:href="@{/admin/port}" class="nav-link px-3 port">
                             <span class="me-2"><i class="bi bi-speedometer2"></i></span>
                             <span>Port</span>
                         </a>

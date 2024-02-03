@@ -91,4 +91,7 @@ public class CustomUserDetails implements UserDetails {
 	public String getFullName() {
 		return user.getFullName();
 	}
+	public String getName() {
+		return user.getName();
+	}
 }
