@@ -279,7 +279,11 @@ public class ShiftExcelHelper {
         	
     		createCell(row, shift.getDateReceive().getDayOfMonth(), content, createStyle(iColor));
     		sumHours += t;
-    		countShift++;
+    		if((int)t/60 > 20) {
+    			countShift += 2;
+    		}else if((int)t/60 > 5) {
+    			countShift++;
+    		}
         	
     		if(size == count) {
     			createCell(row, colSumHours, countShift+"", styleHeader);

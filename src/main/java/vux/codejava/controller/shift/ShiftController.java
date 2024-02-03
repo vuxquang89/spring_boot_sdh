@@ -66,7 +66,7 @@ public class ShiftController {
 //		CustomUserDetails userDetails = (CustomUserDetails)((Authentication)principal).getPrincipal();
 		CustomUserDetails userDetails = principalObject.getCustomUserDetails(principal);
 		String district = userDetails.getDistrict();
-		String fullname = userDetails.getFullName();
+		String fullname = userDetails.getName();
 		boolean inShift = false;
 		
 		model.addAttribute("pageTitle", "Giao - Nhận ca");
