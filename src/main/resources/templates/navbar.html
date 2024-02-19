@@ -29,6 +29,66 @@
         </form>
          -->
          
+         
+         <div class="dropdown">
+		  <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
+		    <i class="bi bi-bell"></i>
+		  </a>
+		  <span class="badge badge-danger">6</span>
+		  <ul class="dropdown-menu notifications" role="menu" aria-labelledby="dLabel">
+		    
+		    <div class="notification-heading"><h4 class="menu-title">Thông báo</h4>
+		    </div>
+		    <li class="divider"></li>
+		   <div class="notifications-wrapper">
+		     <a class="content" href="#">
+		      
+		       <div class="notification-item">
+		        <h4 class="item-title">Evaluation Deadline 1 · day ago</h4>
+		        <p class="item-info">Marketing 101, Video Assignment</p>
+		      </div>
+		       
+		    </a>
+		     <a class="content" href="#">
+		      <div class="notification-item">
+		        <h4 class="item-title">Evaluation Deadline 1 · day ago</h4>
+		        <p class="item-info">Marketing 101, Video Assignment</p>
+		      </div>
+		    </a>
+		     <a class="content" href="#">
+		      <div class="notification-item">
+		        <h4 class="item-title">Evaluation Deadline 1 • day ago</h4>
+		        <p class="item-info">Marketing 101, Video Assignment</p>
+		      </div>
+		    </a>
+		     <a class="content" href="#">
+		      <div class="notification-item">
+		        <h4 class="item-title">Evaluation Deadline 1 • day ago</h4>
+		        <p class="item-info">Marketing 101, Video Assignment</p>
+		      </div>
+		
+		    </a>
+		     <a class="content" href="#">
+		      <div class="notification-item">
+		        <h4 class="item-title">Evaluation Deadline 1 • day ago</h4>
+		        <p class="item-info">Marketing 101, Video Assignment</p>
+		      </div>
+		    </a>
+		     <a class="content" href="#">
+		      <div class="notification-item">
+		        <h4 class="item-title">Evaluation Deadline 1 • day ago</h4>
+		        <p class="item-info">Marketing 101, Video Assignment</p>
+		      </div>
+		    </a>
+		
+		   </div>
+		    <li class="divider"></li>
+		    
+		  </ul>
+		  
+		</div>
+         
+         
          <div class="ms-auto text-white" sec:authorize="isAuthenticated()">
          	<span th:text = "'Chào ' + ${#request.userPrincipal.principal.fullName}"></span>
          </div>
