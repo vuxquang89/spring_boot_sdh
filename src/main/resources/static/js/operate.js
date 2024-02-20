@@ -14,7 +14,8 @@ $(document).ready(function(){
 		getCableLink("edit", Id);
 	});
 	
-	$('#startTime').on('change', getTime);
+	//$('#startTime').on('change', getTime);
+	$('#startTime').on('change', changeStartTime);
 	$('#endTime').on('change', getTime);
 	
 	$('#btnAddOperational').on('click', function(){
@@ -177,6 +178,17 @@ function getCableLink(action, Id){
 		//alert("done");
 		console.log("done");
 	})
+}
+
+function changeStartTime(){
+	$("input#endTime").val(nextTime($("input#startTime").val()));
+	getTime();
+}
+
+function nextTime(timeValue){	
+	var timeArray = timeValue.split(":");
+	var second =  parseInt(timeArray[1], 10) + 1;
+	return timeArray[0] + ":" + second;
 }
 
 function getTime(){
