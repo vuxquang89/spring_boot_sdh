@@ -12,6 +12,8 @@ public interface OperationalStatisticServices {
 	
 	List<OperationalStatistics> findAll();
 	
+	List<OperationalStatistics> getNotificationsOperatinal(String district);
+	
 	void delete(String userUpdate, LocalDateTime updateTime, Long id);
 	
 	void update(String userUpdate, Long cableLinkId, Long eventId, LocalDateTime startTime, LocalDateTime endTime,
@@ -25,4 +27,6 @@ public interface OperationalStatisticServices {
 	List<OperationalStatistics> getOperationalByMonth(Integer month, Integer year);
 	
 	List<OperationalStatistics> getOperatinalInputDate(LocalDate date, Long cableTypeId);
+	
+	void runProcedureUpdateDateTime();
 }

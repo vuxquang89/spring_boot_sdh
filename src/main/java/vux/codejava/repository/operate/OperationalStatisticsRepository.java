@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 
 import vux.codejava.entity.operate.OperationalStatistics;
 
@@ -31,6 +32,12 @@ public interface OperationalStatisticsRepository extends JpaRepository<Operation
 	@Query("SELECT o FROM operational_statistics o WHERE MONTH(o.startTime) = ?1 AND YEAR(o.startTime) = ?2 AND o.action = 1")
 	List<OperationalStatistics> getOperatinalByMonth(Integer month, Integer year);
 	
+	@Query("SELECT o FROM operational_statistics o WHERE o.district = ?1 AND o.event.id = 9 AND o.status.id != 3 AND o.action = 1 ORDER BY o.startTime DESC")
+	List<OperationalStatistics> getNotificationsOperatinal(String district);
+	
+	@Query("SELECT o FROM operational_statistics o WHERE o.event.id = 9 AND o.status.id != 3 AND o.action = 1 ORDER BY o.startTime DESC")
+	List<OperationalStatistics> getNotificationsOperatinal();
+	
 	@Transactional
 	@Modifying
 	@Query(value="UPDATE operational_statistics SET user_update = ?1, update_time = ?2, action = 0 WHERE id = ?3", nativeQuery = true)
@@ -44,4 +51,9 @@ public interface OperationalStatisticsRepository extends JpaRepository<Operation
 	void updateOperarional(String userUpdate, Long cableLinkId, Long eventId, LocalDateTime startTime, LocalDateTime endTime,
 			int processingTime, Long serviceInternalId, Long service_customer_id, Long service_backbone_id, Long statusId,
 			String note, LocalDateTime updateTime, Long id);
+	
+	
+	@Procedure("suyhaocap_procedure")
+	void procedureSuyhaocap();
+	
 }

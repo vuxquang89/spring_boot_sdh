@@ -53,6 +53,28 @@ public class OperatinalStatisticRestController {
 		return ResponseEntity.ok(customMessage);
 	}
 	
+	@GetMapping("/operate/notifications/{district}")
+	public ResponseEntity<List<EventCalendar>> getNotifications(@PathVariable("district") String district){
+		
+		List<OperationalStatistics> notifications = services.getNotificationsOperatinal(district);
+		List<EventCalendar> listNotifications = new ArrayList<EventCalendar>();
+		for(OperationalStatistics operate : notifications) {
+			EventCalendar eventCalendar = new EventCalendar();
+			eventCalendar.setId(operate.getId());
+			eventCalendar.setStart(operate.getStartTime());
+			eventCalendar.setEnd(operate.getEndTime());
+			eventCalendar.setNote(operate.getNote());
+			String title = operate.getEvent().getName() + " "
+					+ operate.getCableLink().getCableType().getName() 
+					+ " tuyến " + operate.getCableLink().getName();
+			eventCalendar.setTitle_acronym(title);
+			eventCalendar.setTitle(title);
+			//eventCalendar.setColor(getColor(operate.getStatus().getId(), operate.getProcessingTime()));
+			listNotifications.add(eventCalendar);
+		}
+		return ResponseEntity.ok(listNotifications);
+	}
+	
 	@GetMapping("/operate/calendar/list/{month}/{year}")
 	public ResponseEntity<List<EventCalendar>> getOperateCalendar(
 			@PathVariable("month") Integer month,
@@ -70,7 +92,7 @@ public class OperatinalStatisticRestController {
 					+ operate.getCableLink().getCableType().getName() 
 					+ " tuyến " + operate.getCableLink().getName();
 			eventCalendar.setTitle_acronym(title);
-			eventCalendar.setColor(getColor(operate.getStatus().getId(), operate.getProcessingTime()));
+			eventCalendar.setColor(getColor(operate.getStatus().getId(), operate.getProcessingTime(), operate.getEvent().getId()));
 			listEventCalendar.add(eventCalendar);
 		}
 		return ResponseEntity.ok(listEventCalendar);
@@ -90,16 +112,14 @@ public class OperatinalStatisticRestController {
 				+ " tuyến " + operate.getCableLink().getName();
 		eventCalendar.setTitle(title);
 		eventCalendar.setNote(operate.getNote());
-		eventCalendar.setColor(getColor(operate.getStatus().getId(), operate.getProcessingTime()));
+		eventCalendar.setColor(getColor(operate.getStatus().getId(), operate.getProcessingTime(), operate.getEvent().getId()));
 		eventCalendar.setProcessingTime(operate.getProcessingTime());
 		return ResponseEntity.ok(eventCalendar);
 	}
 	
-	private String getColor(long i, int processingTime) {
+	private String getColor(long i, int processingTime, long eventId) {
 		String color = "";
-		if(processingTime >= 360) {
-			color = Color.RED;
-		}else if(i == 1) {
+		if(i == 1) {
 			// doi lich
 			color = Color.YELLOW;
 		}else if(i == 2) {
@@ -108,6 +128,9 @@ public class OperatinalStatisticRestController {
 		}else {
 			// hoan thanh/ lich moi
 			color = Color.BLUE;
+			if(processingTime >= 360 && eventId != 5) {
+				color = Color.RED;
+			}
 		}
 		System.out.println(processingTime + " : " + i + " = " + color);
 		return color;

@@ -24,6 +24,16 @@ public class OperatinalStatisticImple implements OperationalStatisticServices{
 	}
 	
 	@Override
+	public List<OperationalStatistics> getNotificationsOperatinal(String district) {
+		if(district.equalsIgnoreCase("MN")) {
+			return repo.getNotificationsOperatinal();
+		}else {
+			return repo.getNotificationsOperatinal(district);
+		}
+		
+	}
+	
+	@Override
 	public OperationalStatistics findById(Long operateId) {
 		return repo.findOperateById(operateId);
 	}
@@ -62,5 +72,10 @@ public class OperatinalStatisticImple implements OperationalStatisticServices{
 	@Override
 	public List<OperationalStatistics> getOperationalByMonth(Integer month, Integer year) {
 		return repo.getOperatinalByMonth(month, year);
+	}
+	
+	@Override
+	public void runProcedureUpdateDateTime() {
+		repo.procedureSuyhaocap();
 	}
 }
