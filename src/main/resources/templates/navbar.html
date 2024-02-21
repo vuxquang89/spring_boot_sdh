@@ -32,15 +32,16 @@
          
          <div class="ms-auto text-white" sec:authorize="isAuthenticated()">
          	<span th:text = "'Chào ' + ${#request.userPrincipal.principal.fullName}"></span>
+         	<input type="hidden" id="district" name="district" th:value="${#request.userPrincipal.principal.district}" />
          </div>
          
          
          
-         <div class="dropdown">
+         <div class="dropdown" sec:authorize="isAuthenticated()">
 		  <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
 		    <i class="bi bi-bell"></i>
 		  </a>
-		  <span class="badge badge-danger">6</span>
+		  <span class="badge badge-danger" id="badgeNotification"></span>
 		  <ul class="dropdown-menu notifications" role="menu" aria-labelledby="dLabel">
 		    
 		    <div class="notification-heading"><h4 class="menu-title">Thông báo</h4>

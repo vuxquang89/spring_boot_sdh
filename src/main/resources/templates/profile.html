@@ -63,27 +63,8 @@
 	</button>
 	
 	<!-- FOOTER -->
-  	<footer class="container">
-    
-    	<p>© 2022 Company, <a href="#">SCTV</a></p>
-  	</footer>
-</body>
+  	<th:bock th:include = "@{footer}"/>
 	
-	<script type="text/javascript">
-    	var contextPath = "[[@{/}]]";
-    	var pagePath = "[[${pagePath}]]";
-    	var current = document.getElementsByClassName(pagePath);
-    	
-        current[0].className += " active";
-    	
-    </script> 
-	
-	<script th:src="@{/js/jquery-3.5.1.js}"></script>
-	<script th:src="@{/js/bootstrap.min.js}"></script>
- 
-	<!-- <script th:src="@{/js/bootstrap.bundle.min.js}"></script>  -->    
-    <script th:src="@{/js/jquery.dataTables.min.js}"></script>
-    <script th:src="@{/js/dataTables.bootstrap5.min.js}"></script>
     <script th:src="@{/js/profile.js}"></script>
-    <script th:src="@{/js/script.js}"></script>
+    
 </html>
