@@ -20,7 +20,6 @@ import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.hibernate.validator.internal.engine.messageinterpolation.parser.ELState;
 
 import vux.codejava.entity.shift.ShiftEntity;
 import vux.codejava.lib.Convert;
@@ -279,7 +278,11 @@ public class ShiftExcelHelper {
         	
     		createCell(row, shift.getDateReceive().getDayOfMonth(), content, createStyle(iColor));
     		sumHours += t;
-    		if((int)t/60 > 20) {
+    		if((int)t/60 > 40) {
+    			countShift += 4;
+    		}else if((int)t/60 > 29) {
+    			countShift += 3;
+    		}else if((int)t/60 > 20) {
     			countShift += 2;
     		}else if((int)t/60 > 5) {
     			countShift++;
