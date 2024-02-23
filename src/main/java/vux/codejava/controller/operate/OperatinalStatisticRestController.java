@@ -117,6 +117,13 @@ public class OperatinalStatisticRestController {
 		return ResponseEntity.ok(eventCalendar);
 	}
 	
+	/**
+	 * 
+	 * @param i
+	 * @param processingTime
+	 * @param eventId => event_id = 9 //sua suy hao cap
+	 * @return
+	 */
 	private String getColor(long i, int processingTime, long eventId) {
 		String color = "";
 		if(i == 1) {
@@ -128,7 +135,7 @@ public class OperatinalStatisticRestController {
 		}else {
 			// hoan thanh/ lich moi
 			color = Color.BLUE;
-			if(processingTime >= 360 && eventId != 5) {
+			if(processingTime >= 360 && eventId != 9) {
 				color = Color.RED;
 			}
 		}

@@ -29,7 +29,7 @@ public interface OperationalStatisticsRepository extends JpaRepository<Operation
 			+ "WHERE DATE(o.startTime) = ?1 AND ct.id = ?2 AND cl.id != 0 AND o.action = 1")
 	List<OperationalStatistics> getOperatinalByDateAndCableType(Date date, Long cableTypeId);
 	
-	@Query("SELECT o FROM operational_statistics o WHERE MONTH(o.startTime) = ?1 AND YEAR(o.startTime) = ?2 AND o.action = 1")
+	@Query("SELECT o FROM operational_statistics o WHERE MONTH(o.startTime) = ?1 AND YEAR(o.startTime) = ?2 AND o.event.id != 9 AND o.action = 1")
 	List<OperationalStatistics> getOperatinalByMonth(Integer month, Integer year);
 	
 	@Query("SELECT o FROM operational_statistics o WHERE o.district = ?1 AND o.event.id = 9 AND o.status.id != 3 AND o.action = 1 ORDER BY o.startTime DESC")
